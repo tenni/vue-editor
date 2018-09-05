@@ -96,4 +96,30 @@ input{
     width:100%;
     height:auto;
 }*/
+.top-bar {
+    display: flex;
+    bottom: 0;
+    border-bottom:1px solid #f2f2f2;
+    height: 2.5rem;
+    padding:0 1rem;
+    background: #fafafa;
+}
+
+.top-bar div {
+    flex: 1;
+    height: 2.5rem;
+    line-height: 2.5rem;
+    text-align: center;
+    font-size: .8rem;
+    color: #5dadd0;
+}
+.top-bar .tit{
+  color:#000;
+}
+.top-bar .cancel{
+  text-align:left;
+}
+.top-bar .next{
+  text-align: right
+}
 </style>
