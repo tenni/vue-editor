@@ -11,8 +11,7 @@ import router from './router'
 Vue.prototype.$Message = Message
 Vue.prototype.$axios = axios
 Vue.prototype.$qs = qs
-// 全局配置
-axios.defaults.headers.token = "ZVZwUGs0Q2duTGs9";
+
 
 Vue.config.productionTip = false
 

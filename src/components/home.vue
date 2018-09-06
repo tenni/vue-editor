@@ -35,7 +35,7 @@ export default {
       this.previewHtml = data
     },
     uploadHtml: function () {
-      this.$router.push({ path: 'userinfo' })
+      this.$router.push({ name: 'userInfo' })
       let style = {
         ul: `
               margin: 10px 20px;

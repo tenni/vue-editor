@@ -14,7 +14,6 @@
     "iview": "^3.1.0",
     "qs": "^6.5.2",
     "vue": "^2.5.2",
-    "vue-resource": "^1.5.1",
     "vue-router": "^3.0.1"
   },
   "devDependencies": {
@@ -44,7 +43,6 @@
     "postcss-loader": "^2.0.8",
     "postcss-url": "^7.2.1",
     "rimraf": "^2.6.0",
-    "sass": "^1.13.1",
     "sass-loader": "^7.1.0",
     "semver": "^5.3.0",
     "shelljs": "^0.7.6",

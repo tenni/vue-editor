@@ -71,7 +71,7 @@ export default {
   },
   methods: {
     prevStep(){
-      this.$router.push({ path: 'home' })
+      this.$router.push({ name: 'home' })
     },
     checkForm: function (e) {
       if (this.name && this.cellphone && this.wechatId) {
