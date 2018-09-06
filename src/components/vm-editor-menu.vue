@@ -1,5 +1,5 @@
 <template>
-  <div class="vm-editor-menu">
+  <div class="vm-editor-menu" ref="abc">
           <button class="button icon-pic"><em class="icon"></em></button>
           <button class="button icon-font" @click="crrShowWrap()"><em class="icon"></em></button>
           <button class="button icon-hr" @click="execCommand('insertHorizontalRule')"><em class="icon"></em></button>
@@ -70,6 +70,10 @@ export default {
         document.execCommand('insertImage', false, base64Image)
       }
     }
+  },
+  mounted(){
+    //console.log(this.$refs.abc)
+    //this.$refs.abc.scrollIntoView(false);
   }
 }
 </script>

@@ -1,16 +1,17 @@
 <template>
-  <div id="app">
-    <home></home>
+  <div id="app" ref="abc">
+    <router-view/>
   </div>
 </template>
 
 <script>
-import home from './components/home'
+//import home from './components/home'
 
 export default {
   name: 'App',
-  components: {
-    home
+  mounted(){
+    //console.log(this.$refs.abc.offsetHeight)
+    //this.$refs.abc.offsetHeight;
   }
 }
 

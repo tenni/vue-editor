@@ -5,11 +5,7 @@
         <div class="tit">投稿内容</div>
         <div class="next"></div>
     </div>
-    <form
-      @submit.prevent="checkForm"
-      action="https://vuejs.org/"
-      method="post"
-    >
+    <form @submit.prevent="checkForm">
       <p class="input-box">
         <label for="name">作者署名<em>*</em></label>
         <input
@@ -21,22 +17,22 @@
       </p>
 
       <p class="input-box">
-        <label for="tel">联系电话<em>*</em></label>
+        <label for="cellphone">联系电话<em>*</em></label>
         <input
-          id="tel"
-          v-model="tel"
+          id="cellphone"
+          v-model="cellphone"
           type="number"
-          name="tel"
+          name="cellphone"
         >
       </p>
 
       <p class="input-box">
-        <label for="wechat">微信号<em>*</em></label>
+        <label for="wechatId">微信号<em>*</em></label>
         <input
-          id="wechat"
-          v-model="wechat"
+          id="wechatId"
+          v-model="wechatId"
           type="text"
-          name="wechat"
+          name="wechatId"
         >
       </p>
 
@@ -67,19 +63,33 @@ export default {
   name: 'userInfo',
   data () {
     return {
+      id: null,
       name: null,
-      tel: null,
-      wechat: null,
-      alipay: null,
+      cellphone: null,
+      wechatId: null,
     }
   },
   methods: {
     prevStep(){
-      this.$emit('increment', {step1: true, step2: false})
+      this.$router.push({ path: 'home' })
     },
     checkForm: function (e) {
-      if (this.name && this.tel && this.wechat) {
-        this.$Message.success('发送成功！');
+      if (this.name && this.cellphone && this.wechatId) {
+        //this.$Message.success('发送成功！');
+        //console.log(this.name+'cellphone'+this.cellphone+'wechatId'+this.wechatId)
+        const qs = this.$qs.stringify({
+            id:this.id,
+            name:this.name,
+            cellphone:this.cellphone,
+            wechatId:this.wechatId
+        });
+        this.$axios.post('/api/api/document/send',qs)
+        .then(res => {
+          console.log(res.data)
+        })
+        .catch(error => {
+          console.log(error)
+        })
         return true;
       }
       this.$Message.destroy()
@@ -87,16 +97,28 @@ export default {
         this.$Message.info('请填写作者署名！');
         return false;
       }
-      if (!this.tel) {
+      if (!this.cellphone) {
         this.$Message.info('请填写联系电话！');
         return false;
       }
-      if (!this.wechat) {
+      if (!this.wechatId) {
         this.$Message.info('请填写微信号！');
         return false;
       }
 
     }
+  },
+  created(){
+    this.$axios.get('/api/api/document/ownerinfo')
+    .then(res => {
+      this.id = res.data.data.id
+      this.name = res.data.data.name
+      this.cellphone = res.data.data.cellphone
+      this.wechatId = res.data.data.wechatId
+    })
+    .catch(error => {
+      console.log(error)
+    })
   }
 }
 </script>

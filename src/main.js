@@ -3,14 +3,23 @@
 import Vue from 'vue'
 import App from './App'
 import { Message } from 'iview';
-Vue.prototype.$Message = Message
 import 'iview/dist/styles/iview.css';
+import axios from 'axios'
+import qs from 'qs'
+import router from './router'
+
+Vue.prototype.$Message = Message
+Vue.prototype.$axios = axios
+Vue.prototype.$qs = qs
+// 全局配置
+axios.defaults.headers.token = "ZVZwUGs0Q2duTGs9";
 
 Vue.config.productionTip = false
 
 /* eslint-disable no-new */
 new Vue({
   el: '#app',
+  router,
   components: { App },
   template: '<App/>'
 })
