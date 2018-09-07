@@ -1,36 +1,30 @@
 <template>
-  <div class="vm-editor-menu" ref="abc">
-          <button class="button icon-pic"><em class="icon"></em></button>
-          <button class="button icon-font" @click="crrShowWrap()"><em class="icon"></em></button>
-          <button class="button icon-hr" @click="execCommand('insertHorizontalRule')"><em class="icon"></em></button>
-    <!-- <VmEditorButton>
-      <VmEditorDropdown>
-        <ul class="vm-editor-ul">
-          <li @click="execCommand('fontSize', 7)">
-            <button style="font-size: 24px">7</button>
-          </li>
-          <li @click="execCommand('fontSize', 6)">
-            <button style="font-size: 22px">6</button>
-          </li>
-          <li @click="execCommand('fontSize', 5)">
-            <button style="font-size: 20px">5</button>
-          </li>
-          <li @click="execCommand('fontSize', 4)">
-            <button style="font-size: 18px">4</button>
-          </li>
-          <li @click="execCommand('fontSize', 3)">
-            <button style="font-size: 16px">3</button>
-          </li>
-          <li @click="execCommand('fontSize', 2)">
-            <button style="font-size: 14px">2</button>
-          </li>
-          <li @click="execCommand('fontSize', 1)">
-            <button style="font-size: 12px">1</button>
-          </li>
-        </ul>
-      </VmEditorDropdown>
-    </VmEditorButton> -->
-    
+  <div class="vm-editor-menu">
+          <div class="button-wrap">
+            <VmEditorAddimage></VmEditorAddimage>
+            <button class="button icon-font" @click="tabBoo">
+              <em class="icon"></em>
+            </button>
+            <button class="button icon-hr" @click="execCommand('insertHorizontalRule','',1)" ref="line"><em class="icon"></em></button>
+          </div>
+          <VmEditorButton :boo="fatherBoo">
+            <VmEditorDropdown>
+              <ul class="vm-editor-ul">
+                <li @click="execCommand('formatBlock', '<h1>')">
+                  <button style="font-size: 24px">大标题</button>
+                </li>
+                <li @click="execCommand('formatBlock', '<h2>')">
+                  <button style="font-size: 22px">标题</button>
+                </li>
+                <li @click="execCommand('formatBlock', '<h3>')">
+                  <button style="font-size: 20px">正文</button>
+                </li>
+                <li @click="execCommand('insertUnorderedList')">
+                  <button style="font-size: 18px">无序列表</button>
+                </li>
+              </ul>
+            </VmEditorDropdown>
+          </VmEditorButton>
     
 
     
@@ -49,30 +43,32 @@ import VmEditorDropdown from './vm-editor-dropdown.vue'
 import VmEditorAddimage from './vm-editor-addimage.vue'
 export default {
   name: 'VmEditorMenu',
+  data(){
+    return{
+      fatherBoo: false
+    }
+  },
   components: {
     VmEditorButton,
     VmEditorDropdown,
     VmEditorAddimage,
   },
   methods: {
-    execCommand: function (commandName, valueArgument) {
+    execCommand: function (commandName, valueArgument,e) {
       if (!valueArgument) {
         valueArgument = null
       }
       document.execCommand(commandName, false, valueArgument)
-    },
-    setImage: function (evt) {
-      let reader = new FileReader()
-      let file = evt.target.files[0]
-      reader.readAsDataURL(file)
-      reader.onload = function (evt) {
-        let base64Image = evt.target.result
-        document.execCommand('insertImage', false, base64Image)
+      if (!e) {
+        this.fatherBoo = !this.fatherBoo
       }
+    },
+    tabBoo(){
+      this.fatherBoo = !this.fatherBoo
     }
   },
   mounted(){
-    //console.log(this.$refs.abc)
+    //console.log(this.$refs.line)
     //this.$refs.abc.scrollIntoView(false);
   }
 }
@@ -80,19 +76,18 @@ export default {
 <style scoped>
   .vm-editor-menu {
       position: fixed;
-      display: -webkit-flex; /* Safari */
-      display: flex;
       bottom: 0;
-      border-top:1px solid #f2f2f2;
-      border-bottom:1px solid #f2f2f2;
-      width: 18.75rem;
-      height: 2rem;
-      background: #fafafa;
   }
-
+  .button-wrap{
+    display: flex;
+    border-top:1px solid #f2f2f2;
+    border-bottom:1px solid #f2f2f2;
+    width: 18.75rem;
+    height: 2rem;
+    background: #fafafa;
+  }
   .vm-editor-menu .button {
       flex: 1;
-      display: -webkit-flex; /* Safari */
       display: flex;
       justify-content:center;
       align-items:center;

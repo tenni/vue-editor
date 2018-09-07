@@ -12,7 +12,6 @@ Vue.prototype.$Message = Message
 Vue.prototype.$axios = axios
 Vue.prototype.$qs = qs
 
-
 Vue.config.productionTip = false
 
 /* eslint-disable no-new */

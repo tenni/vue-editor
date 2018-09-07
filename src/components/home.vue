@@ -2,9 +2,9 @@
   <div class="main">
     <div class="home">
       <div class="top-bar">
-          <div class="cancel">取消</div>
+          <div class="cancel"></div>
           <div class="tit">投稿内容</div>
-          <div class="next" @click="uploadHtml()">下一步</div>
+          <div class="next" :class="{ on: isOn}" @click="uploadHtml()">下一步</div>
       </div>
       <div class="title">
         <input type="text" placeholder="请输入标题" v-model="title">
@@ -24,18 +24,16 @@ export default {
     return {
       id:'',
       title:'',
-      previewHtml: ''
+      previewHtml: '',
+      isOn: true
     }
   },
   components: {
     VmEditor
   },
   methods: {
-    showHtml: function (data) {
-      this.previewHtml = data
-    },
     uploadHtml: function () {
-      this.$router.push({ name: 'userInfo' })
+      
       let style = {
         ul: `
               margin: 10px 20px;
@@ -53,7 +51,7 @@ export default {
             `,
         hr: `
               margin: 15px 0;
-              border-top: 1px solid #eeeff1;
+              border-top: 1px dashed #737373;
             `,
         pre: `
               display: block;
@@ -72,6 +70,7 @@ export default {
                     `,
         img: `
                margin: 20px 0;
+               max-width:100%;
              `,
         a: `
             color: #41b883;
@@ -97,31 +96,61 @@ export default {
       htmlContainer.innerHTML = html.innerHTML
       htmlContainerParent.appendChild(htmlContainer)
 
-      this.previewHtml = htmlContainerParent.innerHTML
+      this.previewHtml = html.innerHTML
 
-      const qs = this.$qs.stringify({
+
+      if (this.title && this.previewHtml) {
+        
+        const qs = this.$qs.stringify({
           id:this.id,
           documentTitle:this.title,
           documentContext:this.previewHtml
-      });
-      this.$axios.post('/api/api/document/save',qs)
-      .then(res => {
-        console.log(res.data)
-      })
-      .catch(error => {
-        console.log(error)
-      })
+        });
+        this.$axios.post('/api/document/save',qs)
+        .then(res => {
+          console.log(res.data)
+          this.$router.push({ path: '/editor/userinfo', query: { token: this.$route.query.token } })
+        })
+        .catch(error => {
+          console.log(error)
+        })
 
-      
+        //this.$Message.success('发送成功');
+        return true;
+      }
+      this.$Message.destroy()
+      if (!this.title) {
+        this.$Message.info('请输入标题');
+        return false;
+      }
+      if (!this.previewHtml) {
+        this.$Message.info('请输入正文');
+        return false;
+      }
+    },
+    show(){
+      if (this.title && this.previewHtml) {
+        this.isOn = true
+      }
+      else{
+        this.isOn = false
+      }
     }
     //
   },
   created(){
-    this.$axios.get('/api/api/document/preview')
+
+    this.$axios.get('/api/document/preview')
     .then(res => {
       this.id = res.data.data.id
       this.title = res.data.data.documentTitle
-      this.previewHtml = res.data.data.documentContext
+      if(res.data.data.documentContext){
+        this.previewHtml = res.data.data.documentContext
+      }
+      else{
+        this.previewHtml = "请输入正文"
+      }
+      
     })
     .catch(error => {
       console.log(error)
@@ -133,7 +162,7 @@ export default {
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
 .title{
-  padding:0 1rem;
+  padding:0 .8rem;
   border-bottom:1px solid #f2f2f2;
 }
 .title input{

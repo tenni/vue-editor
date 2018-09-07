@@ -1,29 +1,41 @@
 <template>
   <div class="add-img">  
-    Add Imgage
-    <input type="file" accept="image/gif, image/jpeg, image/png" @change="setImage">
+    <span class="icon"></span>
+    <input type="file" accept="image/*" @change="setImage">
   </div>
 </template>
 <style lang="scss">
-  .add-img{
-    width: 100px;
-    height: 30px;
-    line-height: 30px;
-    font-size: 14px;
-    text-align: center;
-    position: relative;
-    cursor: pointer;
-    &:hover{
-      background-color: #f8f8f8;
-    }
-    input{
-      width: 100%;
-      height: 100%;
-      position: absolute;
-      left: 0;
-      top: 0;
-      opacity: 0;
-    }
+  .add-img {
+      position: relative;
+      flex: 1;
+      display: flex;
+      justify-content:center;
+      align-items:center;
+      height: 2rem;
+      line-height: 2rem;
+      text-align: center;
+      font-size: .8rem;
+      color: #3399FF;
+      background: transparent;
+      border:0;
+  
+      .icon{
+        display: block;
+        width:1.5rem;
+        height: 2rem;
+        background-repeat:no-repeat;
+        background-position: center;
+        background-size:100%;
+        background-image: url(../assets/icon-pic.png)
+      }
+      input{
+        width: 100%;
+        height: 100%;
+        position: absolute;
+        left: 0;
+        top: 0;
+        opacity: 0;
+      }
   }
 </style>
 <script>

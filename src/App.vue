@@ -9,6 +9,11 @@
 
 export default {
   name: 'App',
+  data(){
+    return{
+      //
+    }
+  },
   created(){
     // 全局配置
     this.$axios.defaults.headers.token = this.$route.query.token;
@@ -106,7 +111,6 @@ input{
     bottom: 0;
     border-bottom:1px solid #f2f2f2;
     height: 2.5rem;
-    padding:0 1rem;
     background: #fafafa;
 }
 
@@ -123,8 +127,14 @@ input{
 }
 .top-bar .cancel{
   text-align:left;
+  padding-left: 1rem;
 }
 .top-bar .next{
-  text-align: right
+  text-align: right;
+  padding-right: 1rem;
+  color:#808080;
+}
+.top-bar .on{
+  color:#5dadd0;
 }
 </style>

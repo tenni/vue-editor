@@ -1,7 +1,7 @@
 <template>
   <div class="vm-editor" ref="abc">
 
-    <div class="vm-editor-content" contenteditable="true" @focus="focus" @blur="blur" v-html="article">{{article}}</div>
+    <div class="vm-editor-content" contenteditable="true" @focus="focus" @blur="blur" v-html="article" placeholder="请输入标题"></div>
     <VmEditorMenu v-show="menu">
       <!-- <VmEditorButton icon="upload" @click.native="uploadHtml" class="global-control"></VmEditorButton> -->
     </VmEditorMenu>
@@ -56,10 +56,9 @@ export default {
     }
     .vm-editor-content{
       outline: 0;
-      /* height: calc(100% - 40px);
-      min-height: 350px; */
+      min-height: 350px;
       text-align: left;
-      padding: 15px;
+      padding: .8rem .8rem 3rem;
       font-size: 16px;
       ul, ol{
         margin: 10px 20px;
@@ -77,7 +76,7 @@ export default {
       }
       hr{
         margin: 15px 0;
-        border-top: 1px solid #eeeff1;
+        border-top: 1px dashed #737373;
       }
       pre{
         display: block;
@@ -96,6 +95,7 @@ export default {
       }
       img{
         margin: 20px 0;
+        max-width:100%;
       }
       a{
         color: #41b883;

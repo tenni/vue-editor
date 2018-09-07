@@ -13,6 +13,7 @@
           v-model="name"
           type="text"
           name="name"
+          @keyup="keyup"
         >
       </p>
 
@@ -23,6 +24,7 @@
           v-model="cellphone"
           type="number"
           name="cellphone"
+          @keyup="keyup"
         >
       </p>
 
@@ -33,6 +35,7 @@
           v-model="wechatId"
           type="text"
           name="wechatId"
+          @keyup="keyup"
         >
       </p>
 
@@ -50,7 +53,7 @@
       
       <p class="intro">请再次确定，您所要发送的作品是原创首发稿件，没有抄袭、洗稿行为，投稿文章未以任何形式发表于任何公众媒体之上，且您是稿件的版权所有人。</p>
 
-      <p class="submit">
+      <p class="submit" :class="{ on: isOn}">
         <input type="submit" value="OK，发送给萝卜初行">
       </p>
 
@@ -67,49 +70,67 @@ export default {
       name: null,
       cellphone: null,
       wechatId: null,
+      isOn: false
     }
   },
   methods: {
+    keyup(){
+      if (this.name && this.cellphone && this.wechatId) {
+        this.isOn = true;
+      }
+      else{
+        this.isOn = false;
+      }
+    },
     prevStep(){
-      this.$router.push({ name: 'home' })
+      this.$router.push({ path: '/editor/home', query: { token: this.$route.query.token } })
     },
     checkForm: function (e) {
       if (this.name && this.cellphone && this.wechatId) {
-        //this.$Message.success('发送成功！');
-        //console.log(this.name+'cellphone'+this.cellphone+'wechatId'+this.wechatId)
         const qs = this.$qs.stringify({
             id:this.id,
             name:this.name,
             cellphone:this.cellphone,
             wechatId:this.wechatId
         });
-        this.$axios.post('/api/api/document/send',qs)
+        this.$axios.post('/api/document/send',qs)
         .then(res => {
-          console.log(res.data)
+          this.$router.push({ path: '/editor/userinfo/success', query: { token: this.$route.query.token } })
         })
         .catch(error => {
-          console.log(error)
+          this.$router.push({ path: '/editor/userinfo/fail', query: { token: this.$route.query.token } })
         })
+
+        
         return true;
       }
       this.$Message.destroy()
       if (!this.name) {
-        this.$Message.info('请填写作者署名！');
+        this.$Message.info('请填写作者署名');
         return false;
       }
       if (!this.cellphone) {
-        this.$Message.info('请填写联系电话！');
+        this.$Message.info('请填写联系电话');
+        return false;
+      }
+      const reg=11 && /^((13|14|15|17|18)[0-9]{1}\d{8})$/;
+      if(!this.cellphone){
+        this.$Message.info('请填写联系电话');
+        return false;
+      }
+      if(!reg.test(this.cellphone)){
+        this.$Message.info('手机格式不正确');
         return false;
       }
       if (!this.wechatId) {
-        this.$Message.info('请填写微信号！');
+        this.$Message.info('请填写微信号');
         return false;
       }
 
     }
   },
   created(){
-    this.$axios.get('/api/api/document/ownerinfo')
+    this.$axios.get('/api/document/ownerinfo')
     .then(res => {
       this.id = res.data.data.id
       this.name = res.data.data.name
@@ -119,6 +140,11 @@ export default {
     .catch(error => {
       console.log(error)
     })
+  },
+  updated(){
+    if (this.name && this.cellphone && this.wechatId) {
+      this.isOn = true;
+    }
   }
 }
 </script>
@@ -177,8 +203,11 @@ form{
   width:12rem;
   height: 2.5rem;
   border-radius: .3rem;
-  background: #5dadd0;
+  background: #b5b5b5;
   font-size: 1rem;
   color:#fff;
+}
+.submit.on input{
+  background: #5dadd0
 }
 </style>
