@@ -1,7 +1,8 @@
 <template>
   <div class="vm-editor-menu">
           <div class="button-wrap">
-            <VmEditorAddimage></VmEditorAddimage>
+            <!-- <VmEditorAddimage></VmEditorAddimage> -->
+            <slot></slot>
             <button class="button icon-font" @click="tabBoo">
               <em class="icon"></em>
             </button>
@@ -33,7 +34,7 @@
         <!-- <VmEditorAddimage></VmEditorAddimage> -->
 
     
-    <slot></slot>
+    
   </div>
 </template>
 
@@ -65,7 +66,8 @@ export default {
     },
     tabBoo(){
       this.fatherBoo = !this.fatherBoo
-    }
+    },
+    
   },
   mounted(){
     //console.log(this.$refs.line)

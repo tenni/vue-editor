@@ -13,7 +13,6 @@
           v-model="name"
           type="text"
           name="name"
-          @keyup="keyup"
         >
       </p>
 
@@ -24,7 +23,6 @@
           v-model="cellphone"
           type="number"
           name="cellphone"
-          @keyup="keyup"
         >
       </p>
 
@@ -35,7 +33,6 @@
           v-model="wechatId"
           type="text"
           name="wechatId"
-          @keyup="keyup"
         >
       </p>
 
@@ -74,14 +71,6 @@ export default {
     }
   },
   methods: {
-    keyup(){
-      if (this.name && this.cellphone && this.wechatId) {
-        this.isOn = true;
-      }
-      else{
-        this.isOn = false;
-      }
-    },
     prevStep(){
       this.$router.push({ path: '/editor/home', query: { token: this.$route.query.token } })
     },
@@ -144,6 +133,9 @@ export default {
   updated(){
     if (this.name && this.cellphone && this.wechatId) {
       this.isOn = true;
+    }
+    else{
+      this.isOn = false;
     }
   }
 }

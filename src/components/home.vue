@@ -9,7 +9,7 @@
       <div class="title">
         <input type="text" placeholder="请输入标题" v-model="title">
       </div>
-      <VmEditor :article="previewHtml"></VmEditor>
+      <VmEditor :article="previewHtml" @increment="incretol"></VmEditor>
       
     </div>
   </div>
@@ -25,13 +25,16 @@ export default {
       id:'',
       title:'',
       previewHtml: '',
-      isOn: true
+      isOn: false
     }
   },
   components: {
     VmEditor
   },
   methods: {
+    incretol: function(val){
+      this.previewHtml = val
+    },
     uploadHtml: function () {
       
       let style = {
@@ -95,7 +98,7 @@ export default {
                             `
       htmlContainer.innerHTML = html.innerHTML
       htmlContainerParent.appendChild(htmlContainer)
-
+      //console.log(html.innerHTML)
       this.previewHtml = html.innerHTML
 
 
@@ -128,14 +131,7 @@ export default {
         return false;
       }
     },
-    show(){
-      if (this.title && this.previewHtml) {
-        this.isOn = true
-      }
-      else{
-        this.isOn = false
-      }
-    }
+    
     //
   },
   created(){
@@ -155,6 +151,14 @@ export default {
     .catch(error => {
       console.log(error)
     })
+  },
+  updated(){
+      if (this.title && this.previewHtml) {
+        this.isOn = true
+      }
+      else{
+        this.isOn = false
+      }
   }
 }
 </script>
