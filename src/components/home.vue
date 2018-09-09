@@ -1,5 +1,6 @@
 <template>
   <div class="main">
+    <div class="hide">{{editorVal}}</div>
     <div class="home">
       <div class="top-bar">
           <div class="cancel"></div>
@@ -9,7 +10,7 @@
       <div class="title">
         <input type="text" placeholder="请输入标题" v-model="title">
       </div>
-      <VmEditor :article="previewHtml" @increment="incretol"></VmEditor>
+      <VmEditor :article="previewHtml" @increment="incretol" @increment2="incretol2"></VmEditor>
       
     </div>
   </div>
@@ -25,7 +26,8 @@ export default {
       id:'',
       title:'',
       previewHtml: '',
-      isOn: false
+      isOn: false,
+      editorVal: ''
     }
   },
   components: {
@@ -33,6 +35,9 @@ export default {
   },
   methods: {
     incretol: function(val){
+      this.editorVal = val
+    },
+    incretol2: function(val){
       this.previewHtml = val
     },
     uploadHtml: function () {
@@ -135,7 +140,7 @@ export default {
     //
   },
   created(){
-
+    //this.previewHtml = "请输入正文"
     this.$axios.get('/api/document/preview')
     .then(res => {
       this.id = res.data.data.id
@@ -146,14 +151,13 @@ export default {
       else{
         this.previewHtml = "请输入正文"
       }
-      
     })
     .catch(error => {
       console.log(error)
     })
   },
   updated(){
-      if (this.title && this.previewHtml) {
+      if (this.title && this.editorVal) {
         this.isOn = true
       }
       else{
@@ -174,5 +178,5 @@ export default {
   height:3rem;
   font-size: .8rem;
 }
-
+.hide{display: none;}
 </style>

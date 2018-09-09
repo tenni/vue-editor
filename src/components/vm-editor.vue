@@ -1,6 +1,6 @@
 <template>
   <div class="vm-editor" ref="abc">
-    <div class="vm-editor-content" contenteditable="true" ref="editor" @focus="focus" @blur="blur" v-html="article" placeholder="请输入标题"></div>
+    <div class="vm-editor-content" contenteditable="true" ref="editor" @keyup="keyup" @focus="focus" @blur="blur" v-html="article"></div>
     <canvas style="display: none;" id="js-canvas" ref="canvas"></canvas>
     <VmEditorMenu v-show="menu" @increment="imgInput">
             <button class="button icon-pic">
@@ -23,7 +23,7 @@ export default {
   },
   data: function () {
     return {
-      //html: this.article,
+      html: this.article,
       menu: true
     }
   },
@@ -38,7 +38,14 @@ export default {
     tohome(){
       
     },
+    keyup(){
+      this.$emit('increment', this.$refs.editor.innerText)
+    },
     focus(){
+      if (this.article=="请输入正文") {
+        this.$emit('increment2', "")
+      }
+      
       //this.$refs.abc.scrollIntoViewIfNeeded();
       //this.menu = true;
     },
@@ -103,7 +110,8 @@ export default {
   directives: {
     focus: {
       inserted: function (el) {
-        el.focus()
+        //console.log(el)
+        //el.focus()
       }
     }
   }
