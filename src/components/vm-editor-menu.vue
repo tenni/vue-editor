@@ -1,8 +1,8 @@
 <template>
   <div class="vm-editor-menu">
           <div class="button-wrap">
-            <!-- <VmEditorAddimage></VmEditorAddimage> -->
-            <slot></slot>
+           <!--  <VmEditorAddimage></VmEditorAddimage> -->
+            <slot v-if='true'></slot>
             <button class="button icon-font" @click="tabBoo">
               <em class="icon"></em>
             </button>
@@ -12,16 +12,16 @@
             <VmEditorDropdown>
               <ul class="vm-editor-ul">
                 <li @click="execCommand('formatBlock', '<h1>')">
-                  <button style="font-size: 24px">大标题</button>
+                  <button style="font-size: 1rem">大标题</button>
                 </li>
                 <li @click="execCommand('formatBlock', '<h2>')">
-                  <button style="font-size: 22px">标题</button>
+                  <button style="font-size: .9rem">小标题</button>
                 </li>
-                <li @click="execCommand('formatBlock', '<h3>')">
-                  <button style="font-size: 20px">正文</button>
+                <li @click="execCommand('formatBlock', '<div>')">
+                  <button style="font-size: .8rem">正文</button>
                 </li>
                 <li @click="execCommand('insertUnorderedList')">
-                  <button style="font-size: 18px">无序列表</button>
+                  <button style="font-size: .8rem">无序列表</button>
                 </li>
               </ul>
             </VmEditorDropdown>

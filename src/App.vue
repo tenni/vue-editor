@@ -9,18 +9,9 @@
 
 export default {
   name: 'App',
-  data(){
-    return{
-      //
-    }
-  },
   created(){
     // 全局配置
     this.$axios.defaults.headers.token = this.$route.query.token;
-  },
-  mounted(){
-    //console.log(this.$refs.abc.offsetHeight)
-    //this.$refs.abc.offsetHeight;
   }
 }
 

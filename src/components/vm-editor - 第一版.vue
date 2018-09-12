@@ -1,6 +1,7 @@
 <template>
   <div class="vm-editor" ref="abc">
     <div class="vm-editor-content" contenteditable="true" ref="editor" @keyup="keyup" @focus="focus" @blur="blur" v-html="article"></div>
+    <canvas style="display: none;" id="js-canvas" ref="canvas"></canvas>
     <VmEditorMenu v-show="menu" @increment="imgInput">
             <button class="button icon-pic">
               <em class="icon"></em>
@@ -44,56 +45,72 @@ export default {
       if (this.article=="请输入正文") {
         this.$emit('increment2', "")
       }
-      document.body.scrollTop = document.body.scrollHeight;
+      
       //this.$refs.abc.scrollIntoViewIfNeeded();
       //this.menu = true;
     },
     blur(){
       //this.menu = false;
-      //document.body.scrollTop = 0;
     },
     imgInput (eve) {
-        let loadingInstance = this.$loading({ fullscreen: true, lock: true });
-        let t = this
+        //let t = this
         if(eve.target.files.length > 0){
-          this.$lrz(eve.target.files[0], {
-            width: 800
-          })
-          .then(function (rst) {
-              var img = new Image();
-              img.src = rst.base64;
-              const qs = t.$qs.stringify({
-                imgBase64:rst.base64,
-                imgSuffix:""
-              });
-              t.$axios.post('/api/document/file/upload/base64', qs)
-              .then(res => {
-                loadingInstance.close();
-                if (res.data.code === 200) {
-                  img.src = res.data.data
+          console.log(eve)
+          let file = eve.target.files[0]
+          // 当前组件里添加一个属性，没用
+          // this.selectedImg = file.name
+          let URL = window.URL || window.webkitURL,
+            dataURL = URL.createObjectURL(file)
 
-                  let imgWrap = document.createElement('p')
-                  imgWrap.appendChild(img)
-                  t.$refs.editor.appendChild(imgWrap)
-                }
-                else{
-                  t.$Message.error('请重新上传')
-                }
-              })
-              .catch(error => {
-                loadingInstance.close();
-                t.$Message.error('请重新上传')
-              })
-          })
-          .catch(function (err) {
-              // 万一出错了，这里可以捕捉到错误信息
-              // 而且以上的then都不会执行
-              loadingInstance.close();
-              t.$Message.error('请重新上传')
-          })
+          
+          let img = new Image()
+
+          //console.log(img)
+          img.crossOrigin = 'anonymous'
+          img.onload = (function (receiver, callback) {
+            return function (e) {
+              console.log(this)
+              let img = e.target
+
+              img.onload = ''
+              URL.revokeObjectURL(img.src)  // 解除URL对象
+
+              let canvas = document.getElementById('js-canvas'),
+               ctx = canvas.getContext('2d')
+               //console.log(canvas)
+              canvas.width = img.width
+              canvas.height = img.height
+              ctx.drawImage(img, 0, 0)
+              receiver.focus()   // 富文本编辑器必须聚焦才可设置
+              let imgWrap = document.createElement('p'),
+                newImg = document.createElement('img')
+
+
+              newImg.src = canvas.toDataURL()
+              // const qs = t.$qs.stringify({
+              //   imgBase64:canvas.toDataURL(),
+              //   imgSuffix:""
+              // });
+              // t.$axios.post('/api/document/file/upload/base64', qs)
+              // .then(res => {
+              //   console.log(res.data)
+              //   newImg.src = res.data.data
+              // })
+              // .catch(error => {
+              //   console.log(error)
+              // })
+              
+
+              newImg.style = 'max-width:100%'
+              imgWrap.appendChild(newImg)
+              receiver.appendChild(imgWrap)
+              callback()
+            }
+          })(this.$refs.editor, () =>{this.collapseSelection()})
+          img.src = dataURL
         }
 
-    },
+      },
     collapseSelection () {
         /*
          *   @method:折叠选区范围 以 设置 光标位置
@@ -113,10 +130,8 @@ export default {
         sel.collapse(document.body, 0)
         sel.collapse(editor, len)
         editor.scrollTop = editor.clientHeight
-    },
-    //
+      },
   },
-
   directives: {
     focus: {
       inserted: function (el) {
@@ -131,8 +146,27 @@ export default {
 <style lang="scss">
   .icon-pic {
       position: relative;
-      overflow: hidden;
-
+      flex: 1;
+      display: flex;
+      justify-content:center;
+      align-items:center;
+      height: 2rem;
+      line-height: 2rem;
+      text-align: center;
+      font-size: .8rem;
+      color: #3399FF;
+      background: transparent;
+      border:0;
+  
+      .icon{
+        display: block;
+        width:1.5rem;
+        height: 2rem;
+        background-repeat:no-repeat;
+        background-position: center;
+        background-size:100%;
+        background-image: url(../assets/icon-pic.png)
+      }
       input{
         width: 100%;
         height: 100%;
@@ -156,7 +190,7 @@ export default {
       min-height: 350px;
       text-align: left;
       padding: .8rem .8rem 3rem;
-      font-size: .8rem;
+      font-size: 16px;
       ul, ol{
         margin: 10px 20px;
         padding: 0;
@@ -172,7 +206,7 @@ export default {
         padding: 0;
       }
       hr{
-        margin: 20px 30px;
+        margin: 15px 0;
         border-top: 1px dashed #737373;
       }
       pre{

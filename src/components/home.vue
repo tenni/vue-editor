@@ -5,7 +5,7 @@
       <div class="top-bar">
           <div class="cancel"></div>
           <div class="tit">投稿内容</div>
-          <div class="next" :class="{ on: isOn}" @click="uploadHtml()">下一步</div>
+          <div class="next" :class="{ on: isOn}" @click="uploadHtml()" v-loading.fullscreen.lock="fullscreenLoading">下一步</div>
       </div>
       <div class="title">
         <input type="text" placeholder="请输入标题" v-model="title">
@@ -27,7 +27,9 @@ export default {
       title:'',
       previewHtml: '',
       isOn: false,
-      editorVal: ''
+      temp: false,
+      editorVal: '',
+      fullscreenLoading: false
     }
   },
   components: {
@@ -58,7 +60,7 @@ export default {
               padding: 0;
             `,
         hr: `
-              margin: 15px 0;
+              margin: 20px 30px;
               border-top: 1px dashed #737373;
             `,
         pre: `
@@ -107,8 +109,9 @@ export default {
       this.previewHtml = html.innerHTML
 
 
-      if (this.title && this.previewHtml) {
-        
+      if (this.title && this.previewHtml && this.previewHtml!="请输入正文" && this.previewHtml!="<br>") {
+        //let loadingInstance = this.$loading({ fullscreen: true, lock: true });
+        this.fullscreenLoading = true;
         const qs = this.$qs.stringify({
           id:this.id,
           documentTitle:this.title,
@@ -116,23 +119,31 @@ export default {
         });
         this.$axios.post('/api/document/save',qs)
         .then(res => {
-          console.log(res.data)
-          this.$router.push({ path: '/editor/userinfo', query: { token: this.$route.query.token } })
+          //loadingInstance.close();
+          this.fullscreenLoading = false;
+          if (res.data.code === 200) {
+            this.$router.push({ path: '/editor/userinfo', query: { token: this.$route.query.token } })
+          }
+          else{
+            this.$Message.error('发送失败')
+          }
         })
         .catch(error => {
-          console.log(error)
+          //loadingInstance.close();
+          this.fullscreenLoading = false;
+          this.$Message.error('发送失败')
+          
         })
 
-        //this.$Message.success('发送成功');
         return true;
       }
       this.$Message.destroy()
       if (!this.title) {
-        this.$Message.info('请输入标题');
+        this.$Message.info('请输入标题')
         return false;
       }
-      if (!this.previewHtml) {
-        this.$Message.info('请输入正文');
+      if (!this.previewHtml || this.previewHtml=="请输入正文" || this.previewHtml=="<br>") {
+        this.$Message.info('请输入正文')
         return false;
       }
     },
@@ -140,7 +151,6 @@ export default {
     //
   },
   created(){
-    //this.previewHtml = "请输入正文"
     this.$axios.get('/api/document/preview')
     .then(res => {
       this.id = res.data.data.id
@@ -151,18 +161,31 @@ export default {
       else{
         this.previewHtml = "请输入正文"
       }
+
+      
     })
     .catch(error => {
-      console.log(error)
+      console.log("错误："+error)
     })
+
   },
   updated(){
+
+    
       if (this.title && this.editorVal) {
         this.isOn = true
       }
       else{
-        this.isOn = false
+        if (this.title && this.previewHtml) {
+          this.isOn = true
+        }
+        else{
+          this.isOn = false
+        }
       }
+    
+
+
   }
 }
 </script>

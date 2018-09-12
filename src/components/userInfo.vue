@@ -75,24 +75,6 @@ export default {
       this.$router.push({ path: '/editor/home', query: { token: this.$route.query.token } })
     },
     checkForm: function (e) {
-      if (this.name && this.cellphone && this.wechatId) {
-        const qs = this.$qs.stringify({
-            id:this.id,
-            name:this.name,
-            cellphone:this.cellphone,
-            wechatId:this.wechatId
-        });
-        this.$axios.post('/api/document/send',qs)
-        .then(res => {
-          this.$router.push({ path: '/editor/userinfo/success', query: { token: this.$route.query.token } })
-        })
-        .catch(error => {
-          this.$router.push({ path: '/editor/userinfo/fail', query: { token: this.$route.query.token } })
-        })
-
-        
-        return true;
-      }
       this.$Message.destroy()
       if (!this.name) {
         this.$Message.info('请填写作者署名');
@@ -115,7 +97,29 @@ export default {
         this.$Message.info('请填写微信号');
         return false;
       }
-
+      //
+      let loadingInstance = this.$loading({ fullscreen: true, lock: true });
+      const qs = this.$qs.stringify({
+          id:this.id,
+          name:this.name,
+          cellphone:this.cellphone,
+          wechatId:this.wechatId
+      });
+      this.$axios.post('/api/document/send',qs)
+      .then(res => {
+        loadingInstance.close();
+        if (res.data.code === 200) {
+          this.$router.push({ path: '/editor/userinfo/success', query: { token: this.$route.query.token } })
+        }
+        else{
+          this.$router.push({ path: '/editor/userinfo/fail', query: { token: this.$route.query.token } })
+        }
+      })
+      .catch(error => {
+        loadingInstance.close();
+        this.$router.push({ path: '/editor/userinfo/fail', query: { token: this.$route.query.token } })
+      })
+      //
     }
   },
   created(){

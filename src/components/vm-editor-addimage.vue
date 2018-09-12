@@ -44,9 +44,12 @@ export default {
   methods: {
     setImage: function (evt) {
       let reader = new FileReader()
+      console.log(reader)
       let file = evt.target.files[0]
+      console.log(evt)
       reader.readAsDataURL(file)
       reader.onload = function (evt) {
+        console.log(evt)
         let base64Image = evt.target.result
         document.execCommand('insertImage', false, base64Image)
       }

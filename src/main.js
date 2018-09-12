@@ -2,15 +2,24 @@
 // (runtime-only or standalone) has been set in webpack.base.conf with an alias.
 import Vue from 'vue'
 import App from './App'
-import { Message } from 'iview';
-import 'iview/dist/styles/iview.css';
+import { Message } from 'iview'
+import 'iview/dist/styles/iview.css'
 import axios from 'axios'
 import qs from 'qs'
+import lrz from 'lrz'
 import router from './router'
+import { Loading } from 'element-ui';
+
+Vue.use(Loading.directive);
 
 Vue.prototype.$Message = Message
 Vue.prototype.$axios = axios
 Vue.prototype.$qs = qs
+Vue.prototype.$lrz = lrz
+Vue.prototype.$loading = Loading.service;
+
+
+
 
 Vue.config.productionTip = false
 
