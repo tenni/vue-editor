@@ -39,14 +39,21 @@ export default {
     },
     keyup(){
       this.$emit('increment', this.$refs.editor.innerText)
+      if(this.$refs.editor.offsetHeight>350){
+        document.body.scrollTop = document.body.scrollHeight;
+      }
     },
     focus(){
       if (this.article=="请输入正文") {
         this.$emit('increment2', "")
       }
-      document.body.scrollTop = document.body.scrollHeight;
-      //this.$refs.abc.scrollIntoViewIfNeeded();
+      if(this.$refs.editor.offsetHeight>350){
+        document.body.scrollTop = document.body.scrollHeight;
+      }
+      //console.log(document.body.scrollHeight)
+      //this.$refs.abc.scrollIntoView(false);
       //this.menu = true;
+      
     },
     blur(){
       //this.menu = false;
@@ -155,7 +162,7 @@ export default {
       outline: 0;
       min-height: 350px;
       text-align: left;
-      padding: .8rem .8rem 3rem;
+      padding: .8rem .8rem 5rem;
       font-size: .8rem;
       ul, ol{
         margin: 10px 20px;
