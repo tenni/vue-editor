@@ -9,8 +9,15 @@ import qs from 'qs'
 import lrz from 'lrz'
 import router from './router'
 import { Loading } from 'element-ui';
+import { Actionsheet } from 'mint-ui';
+import 'mint-ui/lib/style.css'
+import VueAwesomeSwiper from 'vue-awesome-swiper'
+import 'swiper/dist/css/swiper.css'
+
+Vue.component(Actionsheet.name, Actionsheet);
 
 Vue.use(Loading.directive);
+Vue.use(VueAwesomeSwiper, /* { default global options } */)
 
 Vue.prototype.$Message = Message
 Vue.prototype.$axios = axios

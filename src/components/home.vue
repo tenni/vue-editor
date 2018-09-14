@@ -43,7 +43,6 @@ export default {
       this.previewHtml = val
     },
     uploadHtml: function () {
-      
       let style = {
         ul: `
               margin: 10px 20px;

@@ -7,11 +7,9 @@
         <input ref="imgInput" type="file" accept="image/*" @change="imgInput($event)">
       </button>
 
-      <div class="listpic-wrap-div" slot="pic" ref="picwrap">
-        <ul class="listpic-wrap">
-            <li v-for="item in listpic" @click="insertImg($event)"><img :src="item"></li>
-        </ul>
-      </div>
+      <template slot="pic">
+        <img src="../assets/icon-file.png" alt="" @click="insertImg">
+      </template>
     </VmEditorMenu>
     
     <mt-actionsheet
@@ -39,18 +37,11 @@ export default {
         hide2: false
       },
       actions: [],
-      sheetVisible: false,
-      listpic:[],
-      attrInsertImg:"",
-      swiperOption: {
-        pagination: {
-          el: '.swiper-pagination'
-        },
-        slidesPerView :4
-      },
+      sheetVisible: false
     }
   },
   created(){
+
     //console.log(this.article)
   },
   mounted() {
@@ -76,14 +67,12 @@ export default {
       // let imgWrap = document.createElement('p')
       // imgWrap.innerHTML += "222222222222"
       // window.getSelection().getRangeAt(0).insertNode(imgWrap)
-      document.execCommand('insertImage', false, this.attrInsertImg)
+      document.execCommand('insertImage', false, "https://www.baidu.com/img/baidu_jgylogo3.gif")
     },
     deletePic(){
-      let index = this.listpic.indexOf(this.attrInsertImg)
-      this.listpic.splice(index,1)
+
     },
-    insertImg(e){
-      this.attrInsertImg = e.target.src
+    insertImg(){
       this.sheetVisible = !this.sheetVisible
       let li = this.$refs.actionsheet.$el.children[0].children[1]
       li.innerHTML = '插入到正文<img src="data:image/png;base64,R0lGODlhAQABAID/AMDAwAAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw==" class="blank-img" />'
@@ -116,11 +105,10 @@ export default {
       //document.body.scrollTop = 0;
     },
     imgInput (eve) {
-        this.hideObj.hide2 = true;
-        
+
+        let loadingInstance = this.$loading({ fullscreen: true, lock: true });
         let t = this
         if(eve.target.files.length > 0){
-          let loadingInstance = this.$loading({ fullscreen: true, lock: true });
           this.$lrz(eve.target.files[0], {
             width: 800
           })
@@ -129,9 +117,8 @@ export default {
               var img = new Image();
               img.src = rst.base64;
               let imgWrap = document.createElement('p')
-              imgWrap.appendChild(img)
-              //t.$refs.picwrap.appendChild(imgWrap)
-              t.listpic.push(img.src)
+                  imgWrap.appendChild(img)
+                  t.$refs.editor.appendChild(imgWrap)
               // const qs = t.$qs.stringify({
               //   imgBase64:rst.base64,
               //   imgSuffix:""
@@ -166,7 +153,7 @@ export default {
           .catch(function (err) {
               // 万一出错了，这里可以捕捉到错误信息
               // 而且以上的then都不会执行
-              loadingInstance.close();
+              //loadingInstance.close();
               t.$Message.error('请重新上传')
           })
         }
@@ -207,27 +194,6 @@ export default {
 </script>
 
 <style lang="scss">
-  .listpic-wrap-div{
-    height:8rem;
-  }
-  .listpic-wrap{
-    display:flex;
-    align-items:center;
-    height:8rem;
-    background:#fff;
-    overflow-y:hidden;
-    overflow-x:scroll;
-    li{
-      flex:0 0 auto;
-      margin-left:.5rem;
-      width:4rem;
-      height:4rem;
-      overflow: hidden;
-      img{
-        width:100%;
-      }
-    }
-  }
   .mint-actionsheet-listitem{
     position: relative;
   }

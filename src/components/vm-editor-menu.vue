@@ -1,5 +1,8 @@
 <template>
   <div class="vm-editor-menu">
+          <button class="btn-file" @click="btnFile">
+            <em class="icon" :class="{cur:this.hide.hide2}"></em>
+          </button>
           <div class="button-wrap">
            <!--  <VmEditorAddimage></VmEditorAddimage> -->
             <slot v-if='true'></slot>
@@ -8,7 +11,7 @@
             </button>
             <button class="button icon-hr" @click="execCommand('insertHorizontalRule','',1)" ref="line"><em class="icon"></em></button>
           </div>
-          <VmEditorButton :boo="fatherBoo">
+          <VmEditorButton :boo="this.hide.hide1">
             <VmEditorDropdown>
               <ul class="vm-editor-ul">
                 <li @click="execCommand('formatBlock', '<h1>')">
@@ -26,8 +29,13 @@
               </ul>
             </VmEditorDropdown>
           </VmEditorButton>
-    
 
+          <VmEditorButton :boo2="this.hide.hide2">
+            <slot name='pic'></slot>
+            
+          </VmEditorButton>
+    
+          
     
 
     
@@ -44,9 +52,9 @@ import VmEditorDropdown from './vm-editor-dropdown.vue'
 import VmEditorAddimage from './vm-editor-addimage.vue'
 export default {
   name: 'VmEditorMenu',
+  props:['hide'],
   data(){
     return{
-      fatherBoo: false
     }
   },
   components: {
@@ -65,7 +73,12 @@ export default {
       }
     },
     tabBoo(){
-      this.fatherBoo = !this.fatherBoo
+      this.hide.hide1 = !this.hide.hide1
+      this.hide.hide2 = false
+    },
+    btnFile(){
+      this.hide.hide1 = false
+      this.hide.hide2 = !this.hide.hide2
     },
     
   },
@@ -79,6 +92,27 @@ export default {
   .vm-editor-menu {
       position: fixed;
       bottom: 0;
+      width:18.75rem;
+  }
+  .btn-file{
+    position: absolute;
+    top:-2rem;
+    right:1rem;
+    background: transparent;
+    border:0;
+    outline: 0
+  }
+  .btn-file .icon{
+    display: block;
+    width:1.75rem;
+    height:1.75rem;
+    background-repeat:no-repeat;
+    background-position: center;
+    background-size:100%;
+    background-image: url(../assets/icon-file.png)
+  }
+  .btn-file .cur{
+    background-image: url(../assets/icon-file-h.png)
   }
   .button-wrap{
     display: flex;
@@ -100,6 +134,7 @@ export default {
       color: #3399FF;
       background: transparent;
       border:0;
+      outline: 0
   } 
   .vm-editor-menu .button .icon{
     display: block;

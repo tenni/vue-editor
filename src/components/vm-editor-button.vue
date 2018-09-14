@@ -1,6 +1,7 @@
 <template>
-  <div class="vm-editor-button" @click="showSlot">
+  <div class="vm-editor-button">
     <slot v-if="boo"></slot>
+    <slot v-if="boo2"></slot>
   </div>
 </template>
 <style lang="scss">
@@ -10,7 +11,7 @@
 <script>
 export default {
   name: 'VmEditorButton',
-  props: ['boo'],
+  props: ['boo', 'boo2'],
   data: function () {
     return {
       slot: false
