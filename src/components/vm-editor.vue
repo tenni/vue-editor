@@ -1,5 +1,6 @@
 <template>
   <div class="vm-editor" ref="abc">
+  <input type="text">
     <div class="vm-editor-content" contenteditable="true" ref="editor" @keyup="keyup" @focus="focus" @blur="blur" v-html="article"></div>
     <VmEditorMenu v-show="menu" :hide="hideObj">
       <button class="button icon-pic">
@@ -8,9 +9,9 @@
       </button>
 
       <div class="listpic-wrap-div" slot="pic" ref="picwrap">
-        <ul class="listpic-wrap">
-            <li v-for="item in listpic" @click="insertImg($event)"><img :src="item"></li>
-        </ul>
+        <swiper :options="swiperOption" ref="mySwiper" class="listpic-wrap">
+            <swiper-slide v-for="(item, index) in listpic" :key="index"><img :src="item" @click="insertImg($event)"></swiper-slide>
+        </swiper>
       </div>
     </VmEditorMenu>
     
@@ -46,7 +47,7 @@ export default {
         pagination: {
           el: '.swiper-pagination'
         },
-        slidesPerView :4
+        slidesPerView :'auto'
       },
     }
   },
@@ -62,11 +63,14 @@ export default {
       method: this.insertBody
     }];
 
-
   },
   updated(){
-
-    //console.log(this.html)
+     if (this.listpic.length>0) {
+    let num = this.listpic.length-1
+              console.log(num)
+              //console.log(t.$refs.mySwiper)
+              this.$refs.mySwiper.swiper.slideTo(num, 1000, true)
+            }
     //this.$emit('increment', this.html)
   },
   methods: {
@@ -132,6 +136,8 @@ export default {
               imgWrap.appendChild(img)
               //t.$refs.picwrap.appendChild(imgWrap)
               t.listpic.push(img.src)
+              //console.log(t.listpic.length)
+
               // const qs = t.$qs.stringify({
               //   imgBase64:rst.base64,
               //   imgSuffix:""
@@ -210,14 +216,12 @@ export default {
   .listpic-wrap-div{
     height:8rem;
   }
-  .listpic-wrap{
+  .swiper-wrapper{
     display:flex;
     align-items:center;
     height:8rem;
     background:#fff;
-    overflow-y:hidden;
-    overflow-x:scroll;
-    li{
+    .swiper-slide {
       flex:0 0 auto;
       margin-left:.5rem;
       width:4rem;
