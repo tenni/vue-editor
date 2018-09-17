@@ -1,19 +1,28 @@
 <template>
   <div class="vm-editor" ref="abc">
-  <input type="text">
     <div class="vm-editor-content" contenteditable="true" ref="editor" @keyup="keyup" @focus="focus" @blur="blur" v-html="article"></div>
+    <button class="btn-file" :style="{bottom: fileStyle+'rem'}" @click="btnFile">
+      <em class="icon" :class="{cur:this.hideObj.hide2}"></em>
+    </button>
     <VmEditorMenu v-show="menu" :hide="hideObj">
       <button class="button icon-pic">
         <em class="icon"></em>
         <input ref="imgInput" type="file" accept="image/*" @change="imgInput($event)">
       </button>
+    </VmEditorMenu>
+
+    <VmEditorMenu2 v-show="menu2" :hide="hideObj">
+      <button class="button icon-pic">
+        <em class="icon"></em>
+        <input ref="imgInput" type="file" accept="image/*" @change="imgInput2($event)">
+      </button>
 
       <div class="listpic-wrap-div" slot="pic" ref="picwrap">
         <swiper :options="swiperOption" ref="mySwiper" class="listpic-wrap">
-            <swiper-slide v-for="(item, index) in listpic" :key="index"><img :src="item" @click="insertImg($event)"></swiper-slide>
+            <swiper-slide v-for="(item, index) in listpic" :key="index"><img :src="item" @click="insertImg($event,index)"></swiper-slide>
         </swiper>
       </div>
-    </VmEditorMenu>
+    </VmEditorMenu2>
     
     <mt-actionsheet
       :actions="actions"
@@ -23,18 +32,22 @@
 </template>
 <script>
 import VmEditorMenu from './vm-editor-menu.vue'
+import VmEditorMenu2 from './vm-editor-menu2.vue'
 import VmEditorButton from './vm-editor-button.vue'
 export default {
   name: 'VmEditor',
   props:['article'],
   components: {
     VmEditorMenu,
+    VmEditorMenu2,
     VmEditorButton
   },
   data: function () {
     return {
+      fileStyle: 1,
       html: this.article,
-      menu: true,
+      menu: false,
+      menu2: false,
       hideObj:{
         hide1: false,
         hide2: false
@@ -43,16 +56,18 @@ export default {
       sheetVisible: false,
       listpic:[],
       attrInsertImg:"",
+      attrInsertImgIndex: '',
       swiperOption: {
         pagination: {
           el: '.swiper-pagination'
         },
-        slidesPerView :'auto'
+        slidesPerView :3,
+        spaceBetween :10,
       },
     }
   },
   created(){
-    //console.log(this.article)
+    
   },
   mounted() {
     this.actions = [{
@@ -65,15 +80,28 @@ export default {
 
   },
   updated(){
-     if (this.listpic.length>0) {
-    let num = this.listpic.length-1
-              console.log(num)
-              //console.log(t.$refs.mySwiper)
-              this.$refs.mySwiper.swiper.slideTo(num, 1000, true)
-            }
+    
     //this.$emit('increment', this.html)
   },
   methods: {
+    getUrlRelativePath()
+　　{
+　　　　var url = this.attrInsertImg;
+　　　　var arrUrl = url.split("//");
+
+　　　　var start = arrUrl[1].indexOf("/");
+　　　　var relUrl = arrUrl[1].substring(start);//stop省略，截取从start开始到结尾的所有字符
+
+　　　　if(relUrl.indexOf("?") != -1){
+　　　　　　relUrl = relUrl.split("?")[0];
+　　　　}
+　　　　return relUrl;
+　　},
+    btnFile(){
+      this.menu = false
+      this.menu2 = true
+      this.fileStyle = 2.5
+    },
     insertBody(){
       console.log(window.getSelection().getRangeAt(0))
       window.getSelection().getRangeAt(0)
@@ -83,15 +111,40 @@ export default {
       document.execCommand('insertImage', false, this.attrInsertImg)
     },
     deletePic(){
-      let index = this.listpic.indexOf(this.attrInsertImg)
-      this.listpic.splice(index,1)
+      let loadingInstance = this.$loading({ fullscreen: true, lock: true });
+      let path = location.pathname
+      const qs ={
+        data: this.$qs.stringify({
+          type:0,
+          fileName:this.getUrlRelativePath()
+        })
+      }
+      this.$axios.delete('/api/document/file/delete', qs)
+      .then(res => {
+        loadingInstance.close();
+        if (res.data.code === 200) {
+          console.log(res.data.data)
+          
+          
+          
+        }
+        else{
+          this.$Message.error('请重新上传')
+        }
+      })
+      .catch(error => {
+        console.log(error)
+        loadingInstance.close();
+        this.$Message.error('请重新上传')
+      })
+      //this.listpic.splice(this.attrInsertImgIndex,1)
     },
-    insertImg(e){
+    insertImg(e, index){
       this.attrInsertImg = e.target.src
+      this.attrInsertImgIndex = index
       this.sheetVisible = !this.sheetVisible
       let li = this.$refs.actionsheet.$el.children[0].children[1]
       li.innerHTML = '插入到正文<img src="data:image/png;base64,R0lGODlhAQABAID/AMDAwAAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw==" class="blank-img" />'
-
     },
     keyup(){
 
@@ -112,15 +165,16 @@ export default {
       }
       //console.log(document.body.scrollHeight)
       //this.$refs.abc.scrollIntoView();
-      //this.menu = true;
-      
+      this.menu = true;
+      this.menu2 = false;
+      this.fileStyle = 2.5
     },
     blur(){
       //this.menu = false;
+      //this.fileStyle = 1
       //document.body.scrollTop = 0;
     },
     imgInput (eve) {
-        this.hideObj.hide2 = true;
         
         let t = this
         if(eve.target.files.length > 0){
@@ -134,10 +188,12 @@ export default {
               img.src = rst.base64;
               let imgWrap = document.createElement('p')
               imgWrap.appendChild(img)
-              //t.$refs.picwrap.appendChild(imgWrap)
-              t.listpic.push(img.src)
-              //console.log(t.listpic.length)
-
+              t.$refs.editor.appendChild(imgWrap)
+              /*t.listpic.push(img.src)
+              if (t.listpic.length>0) {
+                let num = t.listpic.length-1
+                t.$refs.mySwiper.swiper.slideTo(num)
+              }*/
               // const qs = t.$qs.stringify({
               //   imgBase64:rst.base64,
               //   imgSuffix:""
@@ -164,10 +220,72 @@ export default {
               //   }
               // })
               // .catch(error => {
-              //   alert(error)
+              //   console.log(error)
               //   loadingInstance.close();
               //   t.$Message.error('请重新上传')
               // })
+          })
+          .catch(function (err) {
+              // 万一出错了，这里可以捕捉到错误信息
+              // 而且以上的then都不会执行
+              loadingInstance.close();
+              t.$Message.error('请重新上传')
+          })
+        }
+
+    },
+    imgInput2 (eve) {
+        this.hideObj.hide2 = true;
+        
+        let t = this
+        if(eve.target.files.length > 0){
+          let loadingInstance = this.$loading({ fullscreen: true, lock: true });
+          this.$lrz(eve.target.files[0], {
+            width: 800
+          })
+          .then(function (rst) {
+              loadingInstance.close();
+              var img = new Image();
+              img.src = rst.base64;
+              //let imgWrap = document.createElement('p')
+              //imgWrap.appendChild(img)
+              //t.$refs.editor.appendChild(imgWrap)
+              
+              const qs = t.$qs.stringify({
+                imgBase64:rst.base64,
+                imgSuffix:""
+              });
+              t.$axios.post('/api/document/file/upload/base64', qs)
+              .then(res => {
+                loadingInstance.close();
+                if (res.data.code === 200) {
+                  img.src = res.data.data
+                  let imgWrap = document.createElement('p')
+                  imgWrap.appendChild(img)
+                  t.listpic.push(img.src)
+                  if (t.listpic.length>0) {
+                    let num = t.listpic.length-1
+                    t.$refs.mySwiper.swiper.slideTo(num)
+                  }
+                  //t.$refs.editor.appendChild(imgWrap)
+                  
+                  //安卓手机打开相册选中图片就获取不到焦点，下面两种都不行
+                  //第一种
+                  //var range = window.getSelection().getRangeAt(0);//找到焦点位置
+                  //range.insertNode(imgWrap)
+                  //第二种
+                  //document.execCommand('insertImage', false, img.src)//第一版，
+                  
+                }
+                else{
+                  t.$Message.error('请重新上传')
+                }
+              })
+              .catch(error => {
+                console.log(error)
+                loadingInstance.close();
+                t.$Message.error('请重新上传')
+              })
           })
           .catch(function (err) {
               // 万一出错了，这里可以捕捉到错误信息
@@ -213,18 +331,43 @@ export default {
 </script>
 
 <style lang="scss">
+  .btn-file{
+    position: fixed;
+    bottom:1rem;
+    right:1rem;
+    background: transparent;
+    border:0;
+    outline: 0
+  }
+  .btn-file .icon{
+    display: block;
+    width:1.75rem;
+    height:1.75rem;
+    background-repeat:no-repeat;
+    background-position: center;
+    background-size:100%;
+    background-image: url(../assets/icon-file.png)
+  }
+  .btn-file .cur{
+    background-image: url(../assets/icon-file-h.png)
+  }
   .listpic-wrap-div{
     height:8rem;
+    background:#fff;
+    overflow:hidden;
+  }
+  .swiper-container{
+    padding-left:.5rem;
+    padding-right:5.3rem;
   }
   .swiper-wrapper{
     display:flex;
     align-items:center;
     height:8rem;
-    background:#fff;
     .swiper-slide {
       flex:0 0 auto;
-      margin-left:.5rem;
-      width:4rem;
+      border:1px solid #f2f2f2;
+      border-radius:.2rem;
       height:4rem;
       overflow: hidden;
       img{

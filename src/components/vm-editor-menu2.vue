@@ -3,29 +3,13 @@
           <div class="button-wrap">
            <!--  <VmEditorAddimage></VmEditorAddimage> -->
             <slot v-if='true'></slot>
-            <button class="button icon-font" @click="tabBoo">
-              <em class="icon"></em>
-            </button>
-            <button class="button icon-hr" @click="execCommand('insertHorizontalRule','',1)" ref="line"><em class="icon"></em></button>
           </div>
-          <VmEditorButton :boo="this.hide.hide1">
-            <VmEditorDropdown>
-              <ul class="vm-editor-ul">
-                <li @click="execCommand('formatBlock', '<h1>')">
-                  <button style="font-size: 1rem">大标题</button>
-                </li>
-                <li @click="execCommand('formatBlock', '<h2>')">
-                  <button style="font-size: .9rem">小标题</button>
-                </li>
-                <li @click="execCommand('formatBlock', '<div>')">
-                  <button style="font-size: .8rem">正文</button>
-                </li>
-                <li @click="execCommand('insertUnorderedList')">
-                  <button style="font-size: .8rem">无序列表</button>
-                </li>
-              </ul>
-            </VmEditorDropdown>
-          </VmEditorButton>
+          
+
+          
+            <slot name='pic'></slot>
+            
+          
     
           
     
@@ -43,7 +27,7 @@ import VmEditorButton from './vm-editor-button.vue'
 import VmEditorDropdown from './vm-editor-dropdown.vue'
 import VmEditorAddimage from './vm-editor-addimage.vue'
 export default {
-  name: 'VmEditorMenu',
+  name: 'VmEditorMenu2',
   props:['hide'],
   data(){
     return{
@@ -67,7 +51,11 @@ export default {
     tabBoo(){
       this.hide.hide1 = !this.hide.hide1
       this.hide.hide2 = false
-    }
+    },
+    btnFile(){
+      this.hide.hide1 = false
+      this.hide.hide2 = !this.hide.hide2
+    },
     
   },
   mounted(){
@@ -82,7 +70,26 @@ export default {
       bottom: 0;
       width:18.75rem;
   }
-  
+  .btn-file{
+    position: absolute;
+    top:-2rem;
+    right:1rem;
+    background: transparent;
+    border:0;
+    outline: 0
+  }
+  .btn-file .icon{
+    display: block;
+    width:1.75rem;
+    height:1.75rem;
+    background-repeat:no-repeat;
+    background-position: center;
+    background-size:100%;
+    background-image: url(../assets/icon-file.png)
+  }
+  .btn-file .cur{
+    background-image: url(../assets/icon-file-h.png)
+  }
   .button-wrap{
     display: flex;
     border-top:1px solid #f2f2f2;
