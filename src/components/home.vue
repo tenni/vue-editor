@@ -8,9 +8,9 @@
           <div class="next" :class="{ on: isOn}" @click="uploadHtml()" v-loading.fullscreen.lock="fullscreenLoading">下一步</div>
       </div>
       <div class="title">
-        <input type="text" placeholder="请输入标题" v-model="title">
+        <input type="text" placeholder="请输入标题" v-model="title" @focus="focus">
       </div>
-      <VmEditor :article="previewHtml" @increment="incretol" @increment2="incretol2"></VmEditor>
+      <VmEditor :listpic="getfileUrl" :closeMenu="closeMenu" :article="previewHtml" @increment="incretol" @increment2="incretol2" @listpic="listpicfa"></VmEditor>
       
     </div>
   </div>
@@ -25,7 +25,13 @@ export default {
     return {
       id:'',
       title:'',
+      fileUrl: '',
+      getfileUrl: [],
       previewHtml: '',
+      closeMenu:{
+        menu1: false,
+        menu2: false
+      },
       isOn: false,
       temp: false,
       editorVal: '',
@@ -36,6 +42,13 @@ export default {
     VmEditor
   },
   methods: {
+    listpicfa(e){
+      this.fileUrl = e.toString()
+    },
+    focus(){
+      this.closeMenu.menu1 = false
+      this.closeMenu.menu2 = false
+    },
     incretol: function(val){
       this.editorVal = val
     },
@@ -114,9 +127,10 @@ export default {
         const qs = this.$qs.stringify({
           id:this.id,
           documentTitle:this.title,
-          documentContext:this.previewHtml
+          documentContext:this.previewHtml,
+          enclosureUrl:this.fileUrl
         });
-        this.$axios.post('/api/document/save',qs)
+        this.$axios.post('/api/document/save', qs)
         .then(res => {
           //loadingInstance.close();
           this.fullscreenLoading = false;
@@ -154,13 +168,16 @@ export default {
     .then(res => {
       this.id = res.data.data.id
       this.title = res.data.data.documentTitle
+      
       if(res.data.data.documentContext){
         this.previewHtml = res.data.data.documentContext
       }
       else{
         this.previewHtml = "请输入正文"
       }
-
+      if (res.data.data.enclosureUrl) {
+        this.getfileUrl = res.data.data.enclosureUrl.split(",")
+      }
       
     })
     .catch(error => {

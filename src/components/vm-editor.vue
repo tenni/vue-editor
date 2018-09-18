@@ -4,14 +4,14 @@
     <button class="btn-file" :style="{bottom: fileStyle+'rem'}" @click="btnFile">
       <em class="icon" :class="{cur:this.hideObj.hide2}"></em>
     </button>
-    <VmEditorMenu v-show="menu" :hide="hideObj">
+    <VmEditorMenu v-show="closeMenu.menu1" :hide="hideObj">
       <button class="button icon-pic">
         <em class="icon"></em>
         <input ref="imgInput" type="file" accept="image/*" @change="imgInput($event)">
       </button>
     </VmEditorMenu>
 
-    <VmEditorMenu2 v-show="menu2" :hide="hideObj">
+    <VmEditorMenu2 v-show="closeMenu.menu2" :hide="hideObj">
       <button class="button icon-pic">
         <em class="icon"></em>
         <input ref="imgInput" type="file" accept="image/*" @change="imgInput2($event)">
@@ -36,7 +36,11 @@ import VmEditorMenu2 from './vm-editor-menu2.vue'
 import VmEditorButton from './vm-editor-button.vue'
 export default {
   name: 'VmEditor',
-  props:['article'],
+  props: {
+    article: String,
+    closeMenu: Object,
+    listpic: Array,
+  },
   components: {
     VmEditorMenu,
     VmEditorMenu2,
@@ -46,15 +50,12 @@ export default {
     return {
       fileStyle: 1,
       html: this.article,
-      menu: false,
-      menu2: false,
       hideObj:{
         hide1: false,
         hide2: false
       },
       actions: [],
       sheetVisible: false,
-      listpic:[],
       attrInsertImg:"",
       attrInsertImgIndex: '',
       swiperOption: {
@@ -78,9 +79,9 @@ export default {
       method: this.insertBody
     }];
 
+    
   },
   updated(){
-    
     //this.$emit('increment', this.html)
   },
   methods: {
@@ -98,44 +99,51 @@ export default {
 　　　　return relUrl;
 　　},
     btnFile(){
-      this.menu = false
-      this.menu2 = true
+      this.closeMenu.menu1 = false
+      this.closeMenu.menu2 = true
       this.fileStyle = 2.5
     },
     insertBody(){
-      console.log(window.getSelection().getRangeAt(0))
       window.getSelection().getRangeAt(0)
       // let imgWrap = document.createElement('p')
       // imgWrap.innerHTML += "222222222222"
       // window.getSelection().getRangeAt(0).insertNode(imgWrap)
       document.execCommand('insertImage', false, this.attrInsertImg)
+      // let imgWrap = document.createElement('p'),
+      //     newImg = document.createElement('img')
+      // newImg.src = this.attrInsertImg
+      // imgWrap.appendChild(newImg)
+      // window.getSelection().getRangeAt(0).insertNode(imgWrap)
     },
     deletePic(){
-      let loadingInstance = this.$loading({ fullscreen: true, lock: true });
-      let path = location.pathname
-      const qs ={
-        data: this.$qs.stringify({
+      let loadingInstance = this.$loading({ fullscreen: true, lock: true })
+      this.$axios.delete('/api/document/file/delete', {
+        params: {
           type:0,
-          fileName:this.getUrlRelativePath()
-        })
-      }
-      this.$axios.delete('/api/document/file/delete', qs)
+          fileName:this.attrInsertImg
+        }
+      })
       .then(res => {
         loadingInstance.close();
         if (res.data.code === 200) {
-          console.log(res.data.data)
-          
-          
-          
+          this.listpic.splice(this.attrInsertImgIndex,1)
+          this.$emit('listpic', this.listpic)
+
+          let node = this.$refs.editor.getElementsByTagName('img')
+          for (var i = node.length - 1; i >= 0; i--) {
+            if (node[i].getAttribute('src')==this.attrInsertImg) {
+              node[i].parentNode.removeChild(node[i]);
+            }
+          }
         }
         else{
-          this.$Message.error('请重新上传')
+          this.$Message.error('请重新删除')
         }
       })
       .catch(error => {
         console.log(error)
         loadingInstance.close();
-        this.$Message.error('请重新上传')
+        this.$Message.error('请重新删除')
       })
       //this.listpic.splice(this.attrInsertImgIndex,1)
     },
@@ -165,8 +173,8 @@ export default {
       }
       //console.log(document.body.scrollHeight)
       //this.$refs.abc.scrollIntoView();
-      this.menu = true;
-      this.menu2 = false;
+      this.closeMenu.menu1 = true;
+      this.closeMenu.menu2 = false;
       this.fileStyle = 2.5
     },
     blur(){
@@ -244,7 +252,6 @@ export default {
             width: 800
           })
           .then(function (rst) {
-              loadingInstance.close();
               var img = new Image();
               img.src = rst.base64;
               //let imgWrap = document.createElement('p')
@@ -260,13 +267,13 @@ export default {
                 loadingInstance.close();
                 if (res.data.code === 200) {
                   img.src = res.data.data
-                  let imgWrap = document.createElement('p')
-                  imgWrap.appendChild(img)
                   t.listpic.push(img.src)
                   if (t.listpic.length>0) {
                     let num = t.listpic.length-1
                     t.$refs.mySwiper.swiper.slideTo(num)
                   }
+
+                  t.$emit('listpic', t.listpic)
                   //t.$refs.editor.appendChild(imgWrap)
                   
                   //安卓手机打开相册选中图片就获取不到焦点，下面两种都不行
