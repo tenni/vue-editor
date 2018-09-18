@@ -1,8 +1,8 @@
 <template>
   <div class="vm-editor" ref="abc">
     <div class="vm-editor-content" contenteditable="true" ref="editor" @keyup="keyup" @focus="focus" @blur="blur" v-html="article"></div>
-    <button class="btn-file" :style="{bottom: fileStyle+'rem'}" @click="btnFile">
-      <em class="icon" :class="{cur:this.hideObj.hide2}"></em>
+    <button class="btn-file" :style="{bottom: closeMenu.rem+'rem'}" @click="btnFile">
+      <em class="icon" :class="{cur:closeMenu.btn}"></em>
     </button>
     <VmEditorMenu v-show="closeMenu.menu1" :hide="hideObj">
       <button class="button icon-pic">
@@ -48,7 +48,6 @@ export default {
   },
   data: function () {
     return {
-      fileStyle: 1,
       html: this.article,
       hideObj:{
         hide1: false,
@@ -99,9 +98,18 @@ export default {
 　　　　return relUrl;
 　　},
     btnFile(){
-      this.closeMenu.menu1 = false
-      this.closeMenu.menu2 = true
-      this.fileStyle = 2.5
+      if (this.closeMenu.menu2) {
+        this.closeMenu.btn = false;
+        this.closeMenu.menu1 = true
+        this.closeMenu.menu2 = false
+        this.closeMenu.rem = 2.5
+      }
+      else{
+        this.closeMenu.btn = true;
+        this.closeMenu.menu1 = false
+        this.closeMenu.menu2 = true
+        this.closeMenu.rem = 10.5
+      }
     },
     insertBody(){
       window.getSelection().getRangeAt(0)
@@ -162,8 +170,6 @@ export default {
       }
     },
     focus(){
-      this.hideObj.hide1 = false 
-      this.hideObj.hide2 = false 
 
       if (this.article=="请输入正文") {
         this.$emit('increment2', "")
@@ -175,7 +181,8 @@ export default {
       //this.$refs.abc.scrollIntoView();
       this.closeMenu.menu1 = true;
       this.closeMenu.menu2 = false;
-      this.fileStyle = 2.5
+      this.closeMenu.btn = false;
+      this.closeMenu.rem = 2.5
     },
     blur(){
       //this.menu = false;
@@ -243,7 +250,7 @@ export default {
 
     },
     imgInput2 (eve) {
-        this.hideObj.hide2 = true;
+        
         
         let t = this
         if(eve.target.files.length > 0){

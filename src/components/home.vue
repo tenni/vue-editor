@@ -30,7 +30,9 @@ export default {
       previewHtml: '',
       closeMenu:{
         menu1: false,
-        menu2: false
+        menu2: false,
+        btn: false,
+        rem: 1
       },
       isOn: false,
       temp: false,
@@ -48,6 +50,8 @@ export default {
     focus(){
       this.closeMenu.menu1 = false
       this.closeMenu.menu2 = false
+      this.closeMenu.btn = false
+      this.closeMenu.rem = 1
     },
     incretol: function(val){
       this.editorVal = val
