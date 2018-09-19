@@ -16,10 +16,14 @@
         <em class="icon"></em>
         <input ref="imgInput" type="file" accept="image/*" @change="imgInput2($event)">
       </button>
+      <button class="button icon-word">
+        <em class="icon"></em>
+        <input ref="imgInput" type="file" @change="wordUpload($event)">
+      </button>
 
       <div class="listpic-wrap-div" slot="pic" ref="picwrap">
         <swiper :options="swiperOption" ref="mySwiper" class="listpic-wrap">
-            <swiper-slide v-for="(item, index) in listpic" :key="index"><img :src="item" @click="insertImg($event,index)"></swiper-slide>
+            <swiper-slide v-for="(item, index) in listpic" :key="index"><img :src="item.src" :type="item.type" :name="item.url" @click="insertImg($event,index)"></swiper-slide>
         </swiper>
       </div>
     </VmEditorMenu2>
@@ -27,6 +31,11 @@
     <mt-actionsheet
       :actions="actions"
       v-model="sheetVisible" ref="actionsheet">
+    </mt-actionsheet>
+
+    <mt-actionsheet
+      :actions="actions2"
+      v-model="sheetVisible2" ref="actionsheet2">
     </mt-actionsheet>
   </div>
 </template>
@@ -48,13 +57,17 @@ export default {
   },
   data: function () {
     return {
+      wordUrl: '',
+      importPic: 'data:image/png;base64,R0lGODlhAQABAID/AMDAwAAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw==',
       html: this.article,
       hideObj:{
         hide1: false,
         hide2: false
       },
       actions: [],
+      actions2: [],
       sheetVisible: false,
+      sheetVisible2: false,
       attrInsertImg:"",
       attrInsertImgIndex: '',
       swiperOption: {
@@ -78,7 +91,10 @@ export default {
       method: this.insertBody
     }];
 
-    
+    this.actions2 = [{
+      name: '删除',
+      method: this.deleteFile
+    }];
   },
   updated(){
     //this.$emit('increment', this.html)
@@ -155,12 +171,50 @@ export default {
       })
       //this.listpic.splice(this.attrInsertImgIndex,1)
     },
+    deleteFile(){
+      let loadingInstance = this.$loading({ fullscreen: true, lock: true })
+      this.$axios.delete('/api/document/file/delete', {
+        params: {
+          type:2,
+          fileName:this.wordUrl
+        }
+      })
+      .then(res => {
+        loadingInstance.close();
+        if (res.data.code === 200) {
+          this.listpic.splice(this.attrInsertImgIndex,1)
+          this.$emit('listpic', this.listpic)
+
+          let node = this.$refs.editor.getElementsByTagName('img')
+          for (var i = node.length - 1; i >= 0; i--) {
+            if (node[i].getAttribute('src')==this.attrInsertImg) {
+              node[i].parentNode.removeChild(node[i]);
+            }
+          }
+        }
+        else{
+          this.$Message.error('请重新删除')
+        }
+      })
+      .catch(error => {
+        console.log(error)
+        loadingInstance.close();
+        this.$Message.error('请重新删除')
+      })
+      //this.listpic.splice(this.attrInsertImgIndex,1)
+    },
     insertImg(e, index){
-      this.attrInsertImg = e.target.src
       this.attrInsertImgIndex = index
-      this.sheetVisible = !this.sheetVisible
-      let li = this.$refs.actionsheet.$el.children[0].children[1]
-      li.innerHTML = '插入到正文<img src="data:image/png;base64,R0lGODlhAQABAID/AMDAwAAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw==" class="blank-img" />'
+      this.attrInsertImg = e.target.src
+      this.wordUrl = e.target.name
+      if (this.attrInsertImg==this.importPic) {
+        this.sheetVisible2 = !this.sheetVisible2
+      }
+      else{
+        this.sheetVisible = !this.sheetVisible
+        let li = this.$refs.actionsheet.$el.children[0].children[1]
+        li.innerHTML = '插入到正文<img src="data:image/png;base64,R0lGODlhAQABAID/AMDAwAAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw==" class="blank-img" />'
+      }
     },
     keyup(){
 
@@ -249,6 +303,47 @@ export default {
         }
 
     },
+    wordUpload (eve) {
+      let loadingInstance = this.$loading({ fullscreen: true, lock: true });
+      let file = eve.target.files[0]
+      let formData = new FormData()
+      formData.append('file', file)
+      formData.append('type', 2)
+      //var reader = new FileReader()
+      //reader.readAsDataURL(file)
+      //reader.onload = function(e) {
+        // 也能获取base64
+      //  console.log(this)
+      //}
+      let t = this
+      t.$axios.post('/api/document/file/upload', formData)
+      .then(res => {
+        loadingInstance.close();
+        if (res.data.code === 200) {
+
+          t.listpic.push({src:t.importPic, type:2, url:res.data.data.url})
+          if (t.listpic.length>0) {
+            let num = t.listpic.length-1
+            t.$refs.mySwiper.swiper.slideTo(num)
+          }
+
+          
+          t.$emit('listpic', t.listpic)
+          
+        }
+        else{
+          t.$Message.error('请重新上传')
+        }
+      })
+      .catch(error => {
+        console.log(error)
+        loadingInstance.close();
+        t.$Message.error('请重新上传')
+      })
+
+
+      
+    },
     imgInput2 (eve) {
         
         
@@ -274,12 +369,13 @@ export default {
                 loadingInstance.close();
                 if (res.data.code === 200) {
                   img.src = res.data.data
-                  t.listpic.push(img.src)
+                  t.listpic.push({src:img.src, type:0})
                   if (t.listpic.length>0) {
                     let num = t.listpic.length-1
                     t.$refs.mySwiper.swiper.slideTo(num)
                   }
 
+                  
                   t.$emit('listpic', t.listpic)
                   //t.$refs.editor.appendChild(imgWrap)
                   
@@ -380,6 +476,8 @@ export default {
     height:8rem;
     .swiper-slide {
       flex:0 0 auto;
+      display:flex;
+      align-items:center;
       border:1px solid #f2f2f2;
       border-radius:.2rem;
       height:4rem;
@@ -389,6 +487,7 @@ export default {
       }
     }
   }
+  
   .mint-actionsheet-listitem{
     position: relative;
   }

@@ -128,4 +128,7 @@ input{
 .top-bar .on{
   color:#5dadd0;
 }
+.swiper-slide img[type='2']{
+  background: url(./assets/icon-file-word.png) no-repeat center center;
+}
 </style>

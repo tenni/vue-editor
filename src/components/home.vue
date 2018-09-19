@@ -10,7 +10,7 @@
       <div class="title">
         <input type="text" placeholder="请输入标题" v-model="title" @focus="focus">
       </div>
-      <VmEditor :listpic="getfileUrl" :closeMenu="closeMenu" :article="previewHtml" @increment="incretol" @increment2="incretol2" @listpic="listpicfa"></VmEditor>
+      <VmEditor :listpic="getfileUrlArr" :closeMenu="closeMenu" :article="previewHtml" @increment="incretol" @increment2="incretol2" @listpic="listpicfa"></VmEditor>
       
     </div>
   </div>
@@ -25,8 +25,7 @@ export default {
     return {
       id:'',
       title:'',
-      fileUrl: '',
-      getfileUrl: [],
+      getfileUrlArr: [],
       previewHtml: '',
       closeMenu:{
         menu1: false,
@@ -45,7 +44,7 @@ export default {
   },
   methods: {
     listpicfa(e){
-      this.fileUrl = e.toString()
+      this.getfileUrlArr = e
     },
     focus(){
       this.closeMenu.menu1 = false
@@ -132,7 +131,7 @@ export default {
           id:this.id,
           documentTitle:this.title,
           documentContext:this.previewHtml,
-          enclosureUrl:this.fileUrl
+          enclosureUrl:JSON.stringify(this.getfileUrlArr)
         });
         this.$axios.post('/api/document/save', qs)
         .then(res => {
@@ -168,6 +167,7 @@ export default {
     //
   },
   created(){
+
     this.$axios.get('/api/document/preview')
     .then(res => {
       this.id = res.data.data.id
@@ -180,7 +180,9 @@ export default {
         this.previewHtml = "请输入正文"
       }
       if (res.data.data.enclosureUrl) {
-        this.getfileUrl = res.data.data.enclosureUrl.split(",")
+        // '[{"src":"http://image.roobbc.com/document-99323a26-2254-4ffd-bbef-a0999b5ec322.jpeg","type":0}]'转数组
+        let str = res.data.data.enclosureUrl
+        this.getfileUrlArr = JSON.parse(str)
       }
       
     })

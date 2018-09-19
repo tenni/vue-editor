@@ -3,9 +3,7 @@
           <div class="button-wrap">
            <!--  <VmEditorAddimage></VmEditorAddimage> -->
             <slot v-if='true'></slot>
-            <button class="button icon-font" @click="tabBoo">
-              <em class="icon"></em>
-            </button>
+            
           </div>
           
 
@@ -73,6 +71,10 @@ export default {
       bottom: 0;
       width:18.75rem;
   }
+  .icon-word {
+      position: relative;
+      overflow: hidden;
+  }
   .btn-file{
     position: absolute;
     top:-2rem;
@@ -126,11 +128,21 @@ export default {
   .vm-editor-menu .icon-pic .icon{
     background-image: url(../assets/icon-file-pic.png)
   }
-  .vm-editor-menu .icon-font .icon{
+  .vm-editor-menu .icon-word .icon{
     background-image: url(../assets/icon-file-word.png);
     height:1.3rem;
     background-size: auto 100%;
   }
+
+
+  .vm-editor-menu .icon-word input{
+        width: 100%;
+        height: 100%;
+        position: absolute;
+        left: 0;
+        top: 0;
+        opacity: 0;
+      }
   .vm-editor-menu .icon-hr .icon{
     background-image: url(../assets/icon-hr.png)
   }
