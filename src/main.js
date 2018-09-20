@@ -13,11 +13,13 @@ import { Actionsheet } from 'mint-ui';
 import 'mint-ui/lib/style.css'
 import VueAwesomeSwiper from 'vue-awesome-swiper'
 import 'swiper/dist/css/swiper.css'
+import { WechatPlugin } from 'vux'
 
 Vue.component(Actionsheet.name, Actionsheet);
 
 Vue.use(Loading.directive);
 Vue.use(VueAwesomeSwiper, /* { default global options } */)
+Vue.use(WechatPlugin)
 
 Vue.prototype.$Message = Message
 Vue.prototype.$axios = axios

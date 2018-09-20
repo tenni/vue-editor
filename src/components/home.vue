@@ -3,7 +3,7 @@
     <div class="hide">{{editorVal}}</div>
     <div class="home">
       <div class="top-bar">
-          <div class="cancel"></div>
+          <div class="cancel" @click="cancelBtn">取消</div>
           <div class="tit">投稿内容</div>
           <div class="next" :class="{ on: isOn}" @click="uploadHtml()" v-loading.fullscreen.lock="fullscreenLoading">下一步</div>
       </div>
@@ -13,6 +13,10 @@
       <VmEditor :listpic="getfileUrlArr" :closeMenu="closeMenu" :article="previewHtml" @increment="incretol" @increment2="incretol2" @listpic="listpicfa"></VmEditor>
       
     </div>
+    <mt-actionsheet
+      :actions="actions"
+      v-model="sheetVisible" ref="actionsheet">
+    </mt-actionsheet>
   </div>
 </template>
 
@@ -36,7 +40,9 @@ export default {
       isOn: false,
       temp: false,
       editorVal: '',
-      fullscreenLoading: false
+      fullscreenLoading: false,
+      actions: [],
+      sheetVisible: false,
     }
   },
   components: {
@@ -163,7 +169,16 @@ export default {
         return false;
       }
     },
-    
+    nosave(){
+      this.$wechat.closeWindow()
+    },
+    yessave(){
+      this.uploadHtml()
+      this.$wechat.closeWindow()
+    },
+    cancelBtn(){
+      this.sheetVisible = !this.sheetVisible
+    }
     //
   },
   created(){
@@ -190,6 +205,15 @@ export default {
       console.log("错误："+error)
     })
 
+  },
+  mounted() {
+    this.actions = [{
+      name: '不保存草稿',
+      method: this.nosave
+    }, {
+      name: '保存草稿',
+      method: this.yessave
+    }]
   },
   updated(){
 

@@ -224,7 +224,7 @@ export default {
       }
     },
     focus(){
-
+      //this.$refs.editor.scrollIntoView()
       if (this.article=="请输入正文") {
         this.$emit('increment2', "")
       }
@@ -487,7 +487,7 @@ export default {
       }
     }
   }
-  
+
   .mint-actionsheet-listitem{
     position: relative;
   }

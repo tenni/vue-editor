@@ -40,23 +40,12 @@ export default {
     VmEditorAddimage,
   },
   methods: {
-    execCommand: function (commandName, valueArgument,e) {
+    execCommand: function (commandName, valueArgument) {
       if (!valueArgument) {
         valueArgument = null
       }
       document.execCommand(commandName, false, valueArgument)
-      if (!e) {
-        this.fatherBoo = !this.fatherBoo
-      }
-    },
-    tabBoo(){
-      this.hide.hide1 = !this.hide.hide1
-      this.hide.hide2 = false
-    },
-    btnFile(){
-      this.hide.hide1 = false
-      this.hide.hide2 = !this.hide.hide2
-    },
+    }
     
   },
   mounted(){

@@ -61,7 +61,7 @@ export default {
       }
       document.execCommand(commandName, false, valueArgument)
       if (!e) {
-        this.fatherBoo = !this.fatherBoo
+        this.hide.hide1 = !this.hide.hide1
       }
     },
     tabBoo(){

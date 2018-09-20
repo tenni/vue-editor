@@ -131,4 +131,26 @@ input{
 .swiper-slide img[type='2']{
   background: url(./assets/icon-file-word.png) no-repeat center center;
 }
+.v-modal{
+  opacity: .3;
+
+}
+.mint-actionsheet{
+  background: transparent;
+}
+.mint-actionsheet-list{
+  margin: 0 .35rem .3rem !important;
+  border-radius: .45rem;
+  overflow: hidden;
+}
+.mint-actionsheet-button{
+  width:auto;
+  margin: 0 .35rem .35rem;
+  border-radius: .45rem;
+}
+.mint-actionsheet-listitem, .mint-actionsheet-button{
+  height: 2.4rem;
+  line-height: 2.4rem;
+  color:#5dadd0;
+}
 </style>
