@@ -130,7 +130,7 @@ export default {
       this.previewHtml = html.innerHTML
 
 
-      if (this.title && this.previewHtml && this.previewHtml!="请输入正文" && this.previewHtml!="<br>") {
+      if (this.title && this.previewHtml && this.previewHtml!='<span style="color:#757575">请输入正文</span>' && this.previewHtml!="<br>") {
         //let loadingInstance = this.$loading({ fullscreen: true, lock: true });
         this.fullscreenLoading = true;
         const qs = this.$qs.stringify({
@@ -164,7 +164,7 @@ export default {
         this.$Message.info('请输入标题')
         return false;
       }
-      if (!this.previewHtml || this.previewHtml=="请输入正文" || this.previewHtml=="<br>") {
+      if (!this.previewHtml || this.previewHtml=='<span style="color:#757575">请输入正文</span>' || this.previewHtml=="<br>") {
         this.$Message.info('请输入正文')
         return false;
       }
@@ -192,7 +192,7 @@ export default {
         this.previewHtml = res.data.data.documentContext
       }
       else{
-        this.previewHtml = "请输入正文"
+        this.previewHtml = '<span style="color:#757575">请输入正文</span>'
       }
       if (res.data.data.enclosureUrl) {
         // '[{"src":"http://image.roobbc.com/document-99323a26-2254-4ffd-bbef-a0999b5ec322.jpeg","type":0}]'转数组
@@ -245,7 +245,7 @@ export default {
 .title input{
   width:100%;
   height:3rem;
-  font-size: .8rem;
+  font-size: .85rem;
 }
 .hide{display: none;}
 </style>

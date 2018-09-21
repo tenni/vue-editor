@@ -27,7 +27,7 @@
         </swiper>
       </div>
     </VmEditorMenu2>
-    
+
     <mt-actionsheet
       :actions="actions"
       v-model="sheetVisible" ref="actionsheet">
@@ -80,7 +80,7 @@ export default {
     }
   },
   created(){
-    
+
   },
   mounted() {
     this.actions = [{
@@ -116,9 +116,9 @@ export default {
     btnFile(){
       if (this.closeMenu.menu2) {
         this.closeMenu.btn = false;
-        this.closeMenu.menu1 = true
+        //this.closeMenu.menu1 = true
         this.closeMenu.menu2 = false
-        this.closeMenu.rem = 2.5
+        this.closeMenu.rem = 1
       }
       else{
         this.closeMenu.btn = true;
@@ -225,7 +225,7 @@ export default {
     },
     focus(){
       //this.$refs.editor.scrollIntoView()
-      if (this.article=="请输入正文") {
+      if (this.article=='<span style="color:#757575">请输入正文</span>') {
         this.$emit('increment2', "")
       }
       if(this.$refs.editor.offsetHeight>350){
@@ -239,12 +239,13 @@ export default {
       this.closeMenu.rem = 2.5
     },
     blur(){
-      //this.menu = false;
+      this.closeMenu.menu1 = false;
+      this.closeMenu.rem = 1
       //this.fileStyle = 1
       //document.body.scrollTop = 0;
     },
     imgInput (eve) {
-        
+
         let t = this
         if(eve.target.files.length > 0){
           let loadingInstance = this.$loading({ fullscreen: true, lock: true });
@@ -275,14 +276,14 @@ export default {
               //     let imgWrap = document.createElement('p')
               //     imgWrap.appendChild(img)
               //     //t.$refs.editor.appendChild(imgWrap)
-                  
+
               //     //安卓手机打开相册选中图片就获取不到焦点，下面两种都不行
               //     //第一种
               //     //var range = window.getSelection().getRangeAt(0);//找到焦点位置
               //     //range.insertNode(imgWrap)
               //     //第二种
               //     //document.execCommand('insertImage', false, img.src)//第一版，
-                  
+
               //   }
               //   else{
               //     t.$Message.error('请重新上传')
@@ -327,9 +328,9 @@ export default {
             t.$refs.mySwiper.swiper.slideTo(num)
           }
 
-          
+
           t.$emit('listpic', t.listpic)
-          
+
         }
         else{
           t.$Message.error('请重新上传')
@@ -342,11 +343,11 @@ export default {
       })
 
 
-      
+
     },
     imgInput2 (eve) {
-        
-        
+
+
         let t = this
         if(eve.target.files.length > 0){
           let loadingInstance = this.$loading({ fullscreen: true, lock: true });
@@ -359,7 +360,7 @@ export default {
               //let imgWrap = document.createElement('p')
               //imgWrap.appendChild(img)
               //t.$refs.editor.appendChild(imgWrap)
-              
+
               const qs = t.$qs.stringify({
                 imgBase64:rst.base64,
                 imgSuffix:""
@@ -375,17 +376,17 @@ export default {
                     t.$refs.mySwiper.swiper.slideTo(num)
                   }
 
-                  
+
                   t.$emit('listpic', t.listpic)
                   //t.$refs.editor.appendChild(imgWrap)
-                  
+
                   //安卓手机打开相册选中图片就获取不到焦点，下面两种都不行
                   //第一种
                   //var range = window.getSelection().getRangeAt(0);//找到焦点位置
                   //range.insertNode(imgWrap)
                   //第二种
                   //document.execCommand('insertImage', false, img.src)//第一版，
-                  
+
                 }
                 else{
                   t.$Message.error('请重新上传')
@@ -447,7 +448,7 @@ export default {
     right:1rem;
     background: transparent;
     border:0;
-    outline: 0
+    outline: 0;
   }
   .btn-file .icon{
     display: block;
