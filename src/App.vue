@@ -39,7 +39,7 @@ export default {
   font-family: 'Avenir', Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  color: #2c3e50;
+  color: #000;
 }
 body,html{
     font-size: .7rem;
@@ -93,6 +93,9 @@ input{
     border-radius:0;
     -webkit-border-radius:0;
 }
+input::-webkit-input-placeholder {
+  color:#757575;
+}
 /*img{
     width:100%;
     height:auto;
@@ -139,18 +142,21 @@ input{
   background: transparent;
 }
 .mint-actionsheet-list{
-  margin: 0 .35rem .3rem !important;
-  border-radius: .45rem;
+  margin: 0 .35rem .35rem !important;
+  border-radius: .5rem;
   overflow: hidden;
 }
 .mint-actionsheet-button{
   width:auto;
   margin: 0 .35rem .35rem;
-  border-radius: .45rem;
+  border-radius: .5rem;
 }
 .mint-actionsheet-listitem, .mint-actionsheet-button{
   height: 2.4rem;
   line-height: 2.4rem;
   color:#5dadd0;
+}
+.mint-actionsheet-listitem:last-child{
+  border-bottom: 0;
 }
 </style>

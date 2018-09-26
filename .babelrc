@@ -11,12 +11,13 @@
   "plugins": [
     "transform-vue-jsx", 
     "transform-runtime",
-    [
-      "component",
-      {
+    ["import", {
+      "libraryName": "iview",
+      "libraryDirectory": "src/components"
+    }],
+    ["component", {
         "libraryName": "element-ui",
         "styleLibraryName": "theme-chalk"
-      }
-    ]
+    }]
   ]
 }
