@@ -232,7 +232,6 @@ export default {
         document.body.scrollTop = document.body.scrollHeight;
       }
       //console.log(document.body.scrollHeight)
-      //this.$refs.abc.scrollIntoView();
       this.closeMenu.menu1 = true;
       this.closeMenu.menu2 = false;
       this.closeMenu.btn = false;
