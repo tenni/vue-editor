@@ -116,9 +116,9 @@ export default {
     btnFile(){
       if (this.closeMenu.menu2) {
         this.closeMenu.btn = false;
-        this.closeMenu.menu1 = true
+        //this.closeMenu.menu1 = true
         this.closeMenu.menu2 = false
-        this.closeMenu.rem = 2.5
+        this.closeMenu.rem = 1
       }
       else{
         this.closeMenu.btn = true;
@@ -225,7 +225,7 @@ export default {
     },
     focus(){
       //this.$refs.editor.scrollIntoView()
-      if (this.article=="请输入正文") {
+      if (this.article=='<span style="color:#757575">请输入正文</span>') {
         this.$emit('increment2', "")
       }
       if(this.$refs.editor.offsetHeight>350){
@@ -238,7 +238,8 @@ export default {
       this.closeMenu.rem = 2.5
     },
     blur(){
-      //this.menu = false;
+      this.closeMenu.menu1 = false;
+      this.closeMenu.rem = 1
       //this.fileStyle = 1
       //document.body.scrollTop = 0;
     },
@@ -446,7 +447,7 @@ export default {
     right:1rem;
     background: transparent;
     border:0;
-    outline: 0
+    outline: 0;
   }
   .btn-file .icon{
     display: block;
