@@ -84,7 +84,7 @@ export default {
   },
   mounted() {
     this.actions = [{
-      name: '删除',
+      name: '删除图片',
       method: this.deletePic
     }, {
       name: '插入到正文',
@@ -92,7 +92,7 @@ export default {
     }];
 
     this.actions2 = [{
-      name: '删除',
+      name: '删除文档',
       method: this.deleteFile
     }];
   },
@@ -100,19 +100,18 @@ export default {
     //this.$emit('increment', this.html)
   },
   methods: {
-    getUrlRelativePath()
-　　{
-　　　　var url = this.attrInsertImg;
-　　　　var arrUrl = url.split("//");
+    getUrlRelativePath(){
+      var url = this.attrInsertImg;
+      var arrUrl = url.split("//");
 
-　　　　var start = arrUrl[1].indexOf("/");
-　　　　var relUrl = arrUrl[1].substring(start);//stop省略，截取从start开始到结尾的所有字符
+      var start = arrUrl[1].indexOf("/");
+      var relUrl = arrUrl[1].substring(start);//stop省略，截取从start开始到结尾的所有字符
 
-　　　　if(relUrl.indexOf("?") != -1){
-　　　　　　relUrl = relUrl.split("?")[0];
-　　　　}
-　　　　return relUrl;
-　　},
+      if(relUrl.indexOf("?") != -1){
+      　　relUrl = relUrl.split("?")[0];
+      }
+      return relUrl;
+    },
     btnFile(){
       if (this.closeMenu.menu2) {
         this.closeMenu.btn = false;
