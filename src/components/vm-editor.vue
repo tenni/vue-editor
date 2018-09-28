@@ -96,9 +96,6 @@ export default {
       method: this.deleteFile
     }];
   },
-  updated(){
-    //this.$emit('increment', this.html)
-  },
   methods: {
     getUrlRelativePath(){
       var url = this.attrInsertImg;
