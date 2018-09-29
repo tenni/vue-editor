@@ -80,7 +80,7 @@ export default {
     }
   },
   created(){
-    console.log()
+    console.log(22)
   },
   mounted() {
     this.actions = [{
