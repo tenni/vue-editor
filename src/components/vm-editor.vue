@@ -111,13 +111,13 @@ export default {
     },
     btnFile(){
       if (this.closeMenu.menu2) {
-        this.closeMenu.btn = false;
+        this.closeMenu.btn = false
         //this.closeMenu.menu1 = true
         this.closeMenu.menu2 = false
         this.closeMenu.rem = 1
       }
       else{
-        this.closeMenu.btn = true;
+        this.closeMenu.btn = true
         this.closeMenu.menu1 = false
         this.closeMenu.menu2 = true
         this.closeMenu.rem = 10.5
