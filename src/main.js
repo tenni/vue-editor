@@ -5,6 +5,7 @@ import App from './App'
 import { Message } from 'iview'
 import 'iview/dist/styles/iview.css'
 import axios from 'axios'
+axios.defaults.baseURL = process.env.API_ROOT
 import qs from 'qs'
 import lrz from 'lrz'
 import router from './router'
