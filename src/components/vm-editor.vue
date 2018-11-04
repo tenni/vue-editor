@@ -5,6 +5,7 @@
       <em class="icon" :class="{cur:closeMenu.btn}"></em>
     </button>
     <VmEditorMenu v-show="closeMenu.menu1" :hide="hideObj">
+      <!-- hideObj传给子元素，子元素再传给子元素 -->
       <button class="button icon-pic">
         <em class="icon"></em>
         <input ref="imgInput" type="file" accept="image/*" @change="imgInput($event)">
@@ -230,8 +231,8 @@ export default {
       this.closeMenu.rem = 2.5
     },
     blur(){
-      this.closeMenu.menu1 = false;
-      this.closeMenu.rem = 1
+      //this.closeMenu.menu1 = false;
+      this.closeMenu.rem = 2.5
       //this.fileStyle = 1
       //document.body.scrollTop = 0;
     },
@@ -534,7 +535,7 @@ export default {
         padding: 0;
       }
       hr{
-        margin: 20px 30px;
+        margin: 20px 0;
         border-top: 1px dashed #737373;
       }
       pre{

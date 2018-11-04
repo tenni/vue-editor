@@ -66,7 +66,6 @@ export default {
     },
     tabBoo(){
       this.hide.hide1 = !this.hide.hide1
-      this.hide.hide2 = false
     }
     
   },

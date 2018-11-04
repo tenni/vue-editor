@@ -83,7 +83,7 @@ export default {
               padding: 0;
             `,
         hr: `
-              margin: 20px 30px;
+              margin: 20px 0;
               border-top: 1px dashed #737373;
             `,
         pre: `
