@@ -39,7 +39,7 @@ export default {
       },
       isOn: false,
       temp: false,
-      editorVal: '',
+      editorVal: '',// 作用下一步颜色
       fullscreenLoading: false,
       actions: [],
       sheetVisible: false,
@@ -58,9 +58,11 @@ export default {
       this.closeMenu.btn = false
       this.closeMenu.rem = 1
     },
+    // 作用下一步颜色
     incretol: function(val){
       this.editorVal = val
     },
+    // 作用去掉请输入正文
     incretol2: function(val){
       this.previewHtml = val
     },

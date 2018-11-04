@@ -59,7 +59,6 @@ export default {
     return {
       wordUrl: '',
       importPic: 'data:image/png;base64,R0lGODlhAQABAID/AMDAwAAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw==',
-      html: this.article,
       hideObj:{
         hide1: false,
         hide2: false
@@ -215,17 +214,14 @@ export default {
     keyup(){
 
       this.$emit('increment', this.$refs.editor.innerText)
-      if(this.$refs.editor.offsetHeight>350){
-        document.body.scrollTop = document.body.scrollHeight;
-      }
+      // if(this.$refs.editor.offsetHeight>350){
+      //   document.body.scrollTop = document.body.scrollHeight;
+      // }
     },
     focus(){
       //this.$refs.editor.scrollIntoView()
       if (this.article=='<span style="color:#757575">请输入正文</span>') {
         this.$emit('increment2', "")
-      }
-      if(this.$refs.editor.offsetHeight>350){
-        document.body.scrollTop = document.body.scrollHeight;
       }
       //console.log(document.body.scrollHeight)
       this.closeMenu.menu1 = true;
@@ -357,6 +353,7 @@ export default {
               //t.$refs.editor.appendChild(imgWrap)
 
               const qs = t.$qs.stringify({
+                timeout:1000,
                 imgBase64:rst.base64,
                 imgSuffix:""
               });
