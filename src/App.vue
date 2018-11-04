@@ -138,7 +138,7 @@ input::-webkit-input-placeholder {
   opacity: .3;
 
 }
-.mint-actionsheet{
+/* .mint-actionsheet{
   background: transparent;
 }
 .mint-actionsheet-list{
@@ -158,5 +158,5 @@ input::-webkit-input-placeholder {
 }
 .mint-actionsheet-listitem:last-child{
   border-bottom: 0;
-}
+} */
 </style>
