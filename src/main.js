@@ -6,7 +6,7 @@ import { Message } from 'iview'
 import 'iview/dist/styles/iview.css'
 import axios from 'axios'
 axios.defaults.baseURL = process.env.API_ROOT
-axios.defaults.timeout = 5000
+axios.defaults.timeout = 10000
 import qs from 'qs'
 import lrz from 'lrz'
 import router from './router'
