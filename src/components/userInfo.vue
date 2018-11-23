@@ -72,7 +72,7 @@ export default {
   },
   methods: {
     prevStep(){
-      this.$router.push({ path: '/editor/home', query: { token: this.$route.query.token } })
+      this.$router.push({ path: '/editor/home' })
     },
     checkForm: function (e) {
       this.$Message.destroy()
@@ -109,15 +109,15 @@ export default {
       .then(res => {
         loadingInstance.close();
         if (res.data.code === 200) {
-          this.$router.push({ path: '/editor/userinfo/success', query: { token: this.$route.query.token } })
+          this.$router.push({ path: '/editor/userinfo/success' })
         }
         else{
-          this.$router.push({ path: '/editor/userinfo/fail', query: { token: this.$route.query.token } })
+          this.$router.push({ path: '/editor/userinfo/fail' })
         }
       })
       .catch(error => {
         loadingInstance.close();
-        this.$router.push({ path: '/editor/userinfo/fail', query: { token: this.$route.query.token } })
+        this.$router.push({ path: '/editor/userinfo/fail' })
       })
       //
     }

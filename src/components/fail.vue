@@ -22,10 +22,10 @@ export default {
   name: 'fail',
   methods: {
     prevStep(){
-      this.$router.push({ path: '/editor/home', query: { token: this.$route.query.token } })
+      this.$router.push({ path: '/editor/home' })
     },
     resend(){
-      this.$router.push({ path: '/editor/userinfo', query: { token: this.$route.query.token } })
+      this.$router.push({ path: '/editor/userinfo' })
     }
   }
 }

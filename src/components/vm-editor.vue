@@ -12,7 +12,7 @@
       </button>
     </VmEditorMenu>
 
-    <VmEditorMenu2 v-show="closeMenu.menu2" :hide="hideObj">
+    <VmEditorMenu2 v-show="closeMenu.menu2">
       <button class="button icon-pic">
         <em class="icon"></em>
         <input ref="imgInput" type="file" accept="image/*" @change="imgInput2($event)">
@@ -60,10 +60,10 @@ export default {
     return {
       wordUrl: '',
       importPic: 'data:image/png;base64,R0lGODlhAQABAID/AMDAwAAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw==',
-      hideObj:{
-        hide1: false,
-        hide2: false
-      },
+      // hideObj:{
+      //   hide1: false,
+      //   hide2: false
+      // },
       actions: [],
       actions2: [],
       sheetVisible: false,
@@ -77,6 +77,11 @@ export default {
         slidesPerView :3,
         spaceBetween :10,
       },
+    }
+  },
+  computed:{
+    hideObj(){
+      return this.$store.state.hideObj
     }
   },
   created(){

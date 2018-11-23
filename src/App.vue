@@ -8,11 +8,7 @@
 //import home from './components/home'
 
 export default {
-  name: 'App',
-  created(){
-    // 全局配置
-    this.$axios.defaults.headers.token = this.$route.query.token;
-  }
+  name: 'app',
 }
 
 ;(function (doc, win) {

@@ -29,11 +29,6 @@ import VmEditorDropdown from './vm-editor-dropdown.vue'
 import VmEditorAddimage from './vm-editor-addimage.vue'
 export default {
   name: 'VmEditorMenu2',
-  props:['hide'],
-  data(){
-    return{
-    }
-  },
   components: {
     VmEditorButton,
     VmEditorDropdown,

@@ -3,12 +3,12 @@
           <div class="button-wrap">
            <!--  <VmEditorAddimage></VmEditorAddimage> -->
             <slot v-if='true'></slot>
-            <button class="button icon-font" @click="tabBoo">
+            <button class="button icon-font" @click="tabBoo(4)">
               <em class="icon"></em>
             </button>
             <button class="button icon-hr" @click="execCommand('insertHorizontalRule','',1)" ref="line"><em class="icon"></em></button>
           </div>
-          <VmEditorButton :boo="this.hide.hide1">
+          <VmEditorButton :boo="hideObj.hide1">
             <VmEditorDropdown>
               <ul class="vm-editor-ul">
                 <li @click="execCommand('formatBlock', '<h1>')">
@@ -44,9 +44,9 @@ import VmEditorDropdown from './vm-editor-dropdown.vue'
 import VmEditorAddimage from './vm-editor-addimage.vue'
 export default {
   name: 'VmEditorMenu',
-  props:['hide'],
-  data(){
-    return{
+  computed:{
+    hideObj(){
+      return this.$store.state.hideObj
     }
   },
   components: {
@@ -61,11 +61,11 @@ export default {
       }
       document.execCommand(commandName, false, valueArgument)
       if (!e) {
-        this.hide.hide1 = !this.hide.hide1
+        this.$store.commit('reducePrice')
       }
     },
-    tabBoo(){
-      this.hide.hide1 = !this.hide.hide1
+    tabBoo(amount){
+      this.$store.dispatch('actionPrice', amount)
     }
     
   },

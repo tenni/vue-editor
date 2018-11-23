@@ -22,7 +22,7 @@ export default {
   name: 'success',
   methods: {
     prevStep(){
-      this.$router.push({ path: '/editor/home', query: { token: this.$route.query.token } })
+      this.$router.push({ path: '/editor/home' })
     },
 
   }

@@ -146,7 +146,7 @@ export default {
           //loadingInstance.close();
           this.fullscreenLoading = false;
           if (res.data.code === 200) {
-            this.$router.push({ path: '/editor/userinfo', query: { token: this.$route.query.token } })
+            this.$router.push({ path: '/editor/userinfo' })
           }
           else{
             this.$Message.error('发送失败')
