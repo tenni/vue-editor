@@ -123,16 +123,16 @@ export default {
     }
   },
   created(){
-    this.$axios.get('/api/document/ownerinfo')
-    .then(res => {
-      this.id = res.data.data.id
-      this.name = res.data.data.name
-      this.cellphone = res.data.data.cellphone
-      this.wechatId = res.data.data.wechatId
-    })
-    .catch(error => {
-      console.log(error)
-    })
+    // this.$axios.get('/api/document/ownerinfo')
+    // .then(res => {
+    //   this.id = res.data.data.id
+    //   this.name = res.data.data.name
+    //   this.cellphone = res.data.data.cellphone
+    //   this.wechatId = res.data.data.wechatId
+    // })
+    // .catch(error => {
+    //   console.log(error)
+    // })
   },
   updated(){
     if (this.name && this.cellphone && this.wechatId) {

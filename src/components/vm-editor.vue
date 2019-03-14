@@ -129,6 +129,7 @@ export default {
       }
     },
     insertBody(){
+      return;
       window.getSelection().getRangeAt(0)
       // let imgWrap = document.createElement('p')
       // imgWrap.innerHTML += "222222222222"
@@ -141,6 +142,7 @@ export default {
       // window.getSelection().getRangeAt(0).insertNode(imgWrap)
     },
     deletePic(){
+      return;
       let loadingInstance = this.$loading({ fullscreen: true, lock: true })
       this.$axios.delete('/api/document/file/delete', {
         params: {
@@ -302,7 +304,7 @@ export default {
 
     },
     wordUpload (eve) {
-      let loadingInstance = this.$loading({ fullscreen: true, lock: true });
+      //let loadingInstance = this.$loading({ fullscreen: true, lock: true });
       let file = eve.target.files[0]
       let formData = new FormData()
       formData.append('file', file)
@@ -313,31 +315,41 @@ export default {
         // 也能获取base64
       //  console.log(this)
       //}
-      let t = this
-      t.$axios.post('/api/document/file/upload', formData)
-      .then(res => {
-        loadingInstance.close();
-        if (res.data.code === 200) {
-
-          t.listpic.push({src:t.importPic, type:2, url:res.data.data.url})
-          if (t.listpic.length>0) {
-            let num = t.listpic.length-1
-            t.$refs.mySwiper.swiper.slideTo(num)
-          }
+      console.log(formData)
+                  let t = this;
+                  t.listpic.push({src:t.importPic, type:2})
+                  if (t.listpic.length>0) {
+                    let num = t.listpic.length-1
+                    t.$refs.mySwiper.swiper.slideTo(num)
+                  }
 
 
-          t.$emit('listpic', t.listpic)
+                  t.$emit('listpic', t.listpic)
+      // let t = this
+      // t.$axios.post('/api/document/file/upload', formData)
+      // .then(res => {
+      //   loadingInstance.close();
+      //   if (res.data.code === 200) {
 
-        }
-        else{
-          t.$Message.error('请重新上传')
-        }
-      })
-      .catch(error => {
-        console.log(error)
-        loadingInstance.close();
-        t.$Message.error('请重新上传')
-      })
+      //     t.listpic.push({src:t.importPic, type:2, url:res.data.data.url})
+      //     if (t.listpic.length>0) {
+      //       let num = t.listpic.length-1
+      //       t.$refs.mySwiper.swiper.slideTo(num)
+      //     }
+
+
+      //     t.$emit('listpic', t.listpic)
+
+      //   }
+      //   else{
+      //     t.$Message.error('请重新上传')
+      //   }
+      // })
+      // .catch(error => {
+      //   console.log(error)
+      //   loadingInstance.close();
+      //   t.$Message.error('请重新上传')
+      // })
 
 
 
@@ -349,26 +361,17 @@ export default {
         if(eve.target.files.length > 0){
           let loadingInstance = this.$loading({ fullscreen: true, lock: true });
           this.$lrz(eve.target.files[0], {
-            width: 800
+            width: 400
           })
           .then(function (rst) {
+              loadingInstance.close();
               var img = new Image();
               img.src = rst.base64;
               //let imgWrap = document.createElement('p')
               //imgWrap.appendChild(img)
               //t.$refs.editor.appendChild(imgWrap)
-
-              const qs = t.$qs.stringify({
-                timeout:1000,
-                imgBase64:rst.base64,
-                imgSuffix:""
-              });
-              t.$axios.post('/api/document/file/upload/base64', qs)
-              .then(res => {
-                loadingInstance.close();
-                if (res.data.code === 200) {
-                  img.src = res.data.data
-                  t.listpic.push({src:img.src, type:0})
+              console.log(rst.base64)
+                  t.listpic.push({src:rst.base64, type:0})
                   if (t.listpic.length>0) {
                     let num = t.listpic.length-1
                     t.$refs.mySwiper.swiper.slideTo(num)
@@ -376,25 +379,43 @@ export default {
 
 
                   t.$emit('listpic', t.listpic)
-                  //t.$refs.editor.appendChild(imgWrap)
+              // const qs = t.$qs.stringify({
+              //   timeout:1000,
+              //   imgBase64:rst.base64,
+              //   imgSuffix:""
+              // });
+              // t.$axios.post('/api/document/file/upload/base64', qs)
+              // .then(res => {
+              //   loadingInstance.close();
+              //   if (res.data.code === 200) {
+              //     img.src = res.data.data
+              //     t.listpic.push({src:img.src, type:0})
+              //     if (t.listpic.length>0) {
+              //       let num = t.listpic.length-1
+              //       t.$refs.mySwiper.swiper.slideTo(num)
+              //     }
 
-                  //安卓手机打开相册选中图片就获取不到焦点，下面两种都不行
-                  //第一种
-                  //var range = window.getSelection().getRangeAt(0);//找到焦点位置
-                  //range.insertNode(imgWrap)
-                  //第二种
-                  //document.execCommand('insertImage', false, img.src)//第一版，
 
-                }
-                else{
-                  t.$Message.error('请重新上传')
-                }
-              })
-              .catch(error => {
-                console.log(error)
-                loadingInstance.close();
-                t.$Message.error('请重新上传')
-              })
+              //     t.$emit('listpic', t.listpic)
+              //     //t.$refs.editor.appendChild(imgWrap)
+
+              //     //安卓手机打开相册选中图片就获取不到焦点，下面两种都不行
+              //     //第一种
+              //     //var range = window.getSelection().getRangeAt(0);//找到焦点位置
+              //     //range.insertNode(imgWrap)
+              //     //第二种
+              //     //document.execCommand('insertImage', false, img.src)//第一版，
+
+              //   }
+              //   else{
+              //     t.$Message.error('请重新上传')
+              //   }
+              // })
+              // .catch(error => {
+              //   console.log(error)
+              //   loadingInstance.close();
+              //   t.$Message.error('请重新上传')
+              // })
           })
           .catch(function (err) {
               // 万一出错了，这里可以捕捉到错误信息

@@ -135,17 +135,17 @@ export default {
       if (this.title && this.previewHtml && this.previewHtml!='<span style="color:#757575">请输入正文</span>' && this.previewHtml!="<br>") {
         //let loadingInstance = this.$loading({ fullscreen: true, lock: true });
         this.fullscreenLoading = true;
-        const qs = this.$qs.stringify({
+        const qs = {
           id:this.id,
           documentTitle:this.title,
           documentContext:this.previewHtml,
           enclosureUrl:JSON.stringify(this.getfileUrlArr)
-        });
-        this.$axios.post('/api/document/save', qs)
+        };
+        this.$axios.put('/save.json', qs)
         .then(res => {
           //loadingInstance.close();
           this.fullscreenLoading = false;
-          if (res.data.code === 200) {
+          if (res.status === 200) {
             this.$router.push({ path: '/editor/userinfo' })
           }
           else{
@@ -185,20 +185,29 @@ export default {
   },
   created(){
 
-    this.$axios.get('/api/document/preview')
+    this.$axios.get('/save.json')
     .then(res => {
-      this.id = res.data.data.id
-      this.title = res.data.data.documentTitle
+      console.log(res)
+      let user = res.data;
+      // let user;
+      // for(let key in data){
+      //           user = data[key]
+                
+      //           //users.push(user)
+      //         }
+      //      console.log(user)   
+      this.id = user.id
+      this.title = user.documentTitle
       
-      if(res.data.data.documentContext){
-        this.previewHtml = res.data.data.documentContext
+      if(user.documentContext){
+        this.previewHtml = user.documentContext
       }
       else{
         this.previewHtml = '<span style="color:#757575">请输入正文</span>'
       }
-      if (res.data.data.enclosureUrl) {
+      if (user.enclosureUrl) {
         // '[{"src":"http://image.roobbc.com/document-99323a26-2254-4ffd-bbef-a0999b5ec322.jpeg","type":0}]'转数组
-        let str = res.data.data.enclosureUrl
+        let str = user.enclosureUrl
         this.getfileUrlArr = JSON.parse(str)
       }
       

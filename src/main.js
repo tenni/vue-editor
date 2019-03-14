@@ -29,8 +29,9 @@ Vue.prototype.$lrz = lrz
 Vue.prototype.$loading = Loading.service
 
 // 全局配置
-axios.defaults.headers.token = "ZVZwUGs0Q2duTGs9"
-axios.defaults.baseURL = process.env.API_ROOT
+//axios.defaults.headers.token = "ZVZwUGs0Q2duTGs9"
+//axios.defaults.baseURL = process.env.API_ROOT
+axios.defaults.baseURL = "https://wd8949778135rvqasr.wilddogio.com"
 axios.defaults.timeout = 10000
 
 Vue.config.productionTip = false
