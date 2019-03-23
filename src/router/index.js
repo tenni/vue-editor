@@ -17,7 +17,7 @@ export default new Router({
       component: editor
     },
     {
-      path: '/',
+      path: '/editor/home',
       name: 'home',
       component: home
     },
